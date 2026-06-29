@@ -1,5 +1,3 @@
-import nodemailer from 'nodemailer';
-import type { Transporter } from 'nodemailer';
 import { Resend } from 'resend';
 import type { AppointmentRequest, ContactRequest, QuoteRequest } from '../types/forms.js';
 
@@ -13,35 +11,18 @@ type EmailAttachment = {
 };
 
 export class NotificationService {
-  private readonly transporter: Transporter | null;
   private readonly resendClient: Resend | null;
 
   constructor() {
-    const host = process.env.SMTP_HOST;
-    const port = Number(process.env.SMTP_PORT || '587');
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASS;
     const resendKey = process.env.RESEND_API_KEY;
 
-    if (host && user && pass) {
-      this.transporter = nodemailer.createTransport({
-        host,
-        port,
-        secure: port === 465,
-        auth: { user, pass },
-      });
+    if (!resendKey) {
+      console.warn('[NotificationService] ⚠ RESEND_API_KEY manquante — les emails ne seront pas envoyés.');
       this.resendClient = null;
       return;
     }
 
-    if (resendKey) {
-      this.transporter = null;
-      this.resendClient = new Resend(resendKey);
-      return;
-    }
-
-    this.transporter = null;
-    this.resendClient = null;
+    this.resendClient = new Resend(resendKey);
   }
 
   async send(
@@ -55,7 +36,7 @@ export class NotificationService {
 
     // ── Mail admin ────────────────────────────────────────────────────────────
     if (!adminEmail) {
-      console.info(`[${type.toUpperCase()}]`, JSON.stringify(payload, null, 2));
+      console.info(`[${type.toUpperCase()}] Aucun ADMIN_EMAIL configuré — payload :`, JSON.stringify(payload, null, 2));
     } else {
       const adminSubject = this.buildAdminSubject(type, payload);
       const adminText = this.buildAdminText(type, payload);
@@ -78,16 +59,20 @@ export class NotificationService {
       const clientText = this.buildClientText(type, payload);
       const clientHtml = this.buildClientHtml(type, payload);
 
-      await this.dispatch({
-        from: fromEmail,
-        to: clientEmail,
-        replyTo: adminEmail ?? fromEmail,
-        subject: clientSubject,
-        text: clientText,
-        html: clientHtml,
-      });
-
-      console.log(`✉  Confirmation envoyée au client : ${clientEmail}`);
+      try {
+        await this.dispatch({
+          from: fromEmail,
+          to: clientEmail,
+          replyTo: adminEmail ?? fromEmail,
+          subject: clientSubject,
+          text: clientText,
+          html: clientHtml,
+        });
+        console.log(`✉  Confirmation envoyée au client : ${clientEmail}`);
+      } catch (err) {
+        // L'admin a déjà été notifié — on log sans bloquer la réponse HTTP
+        console.error(`✗ Échec envoi confirmation client (${clientEmail}) :`, err);
+      }
     }
   }
 
@@ -101,76 +86,55 @@ export class NotificationService {
     html: string;
     attachments?: EmailAttachment[];
   }): Promise<void> {
-    if (this.resendClient) {
-      const resAttachments = (opts.attachments || []).map((a) => ({
-        filename: a.filename,
-        content: a.content,
-      }));
-
-      try {
-        const response = await this.resendClient.emails.send({
-          from: opts.from,
-          to: opts.to,
-          reply_to: opts.replyTo,
-          subject: opts.subject,
-          text: opts.text,
-          html: opts.html,
-          attachments: resAttachments.length ? resAttachments : undefined,
-        });
-        console.log(`✉  Mail envoyé via Resend (${response.id}) → ${opts.to}`);
-      } catch (error) {
-        console.error('✗ Resend:', error);
-        throw error;
-      }
+    if (!this.resendClient) {
+      console.info(`[NO_TRANSPORT] Destinataire : ${opts.to} | ${opts.subject}`);
       return;
     }
 
-    if (this.transporter) {
-      const mailOptions: any = {
-        from: opts.from,
-        to: opts.to,
-        replyTo: opts.replyTo,
-        subject: opts.subject,
-        text: opts.text,
-        html: opts.html,
-      };
+    const resAttachments = (opts.attachments || []).map((a) => ({
+      filename: a.filename,
+      content: a.content,
+    }));
 
-      if (opts.attachments?.length) {
-        mailOptions.attachments = opts.attachments.map((a) => ({
-          filename: a.filename,
-          content: a.content,
-          contentType: a.contentType || a.mimetype,
-        }));
-      }
+    const response = await this.resendClient.emails.send({
+      from: opts.from,
+      to: opts.to,
+      reply_to: opts.replyTo,
+      subject: opts.subject,
+      text: opts.text,
+      html: opts.html,
+      attachments: resAttachments.length ? resAttachments : undefined,
+    });
 
-      await this.transporter.sendMail(mailOptions);
-      console.log(`✉  Mail envoyé via SMTP → ${opts.to}`);
-      return;
+    if (!response.data?.id) {
+      const detail = JSON.stringify(response.error ?? response);
+      throw new Error(`Resend n'a pas retourné d'ID pour ${opts.to} — ${detail}`);
     }
 
-    console.info(`[NO_TRANSPORT] Destinataire : ${opts.to} | ${opts.subject}`);
+    console.log(`✉  Mail envoyé via Resend (${response.data.id}) → ${opts.to}`);
   }
 
   // ── Sujets ──────────────────────────────────────────────────────────────────
 
   private buildAdminSubject(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
-    const name = `${payload.firstName} ${payload.lastName}`.trim();
+    const name = [payload.firstName, payload.lastName].filter(Boolean).join(' ');
     if (type === 'contact') return `Taxi Saulx les Chartreux – Nouveau message de contact – ${name}`;
     if (type === 'quote') return `Taxi Saulx les Chartreux – Nouvelle demande de devis – ${name}`;
     return `Taxi Saulx les Chartreux – Nouveau rendez-vous – ${name}`;
   }
 
-  private buildClientSubject(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
+  private buildClientSubject(type: 'contact' | 'quote' | 'appointment', _payload: Payload): string {
     if (type === 'contact') return `Taxi Saulx les Chartreux – Votre message a bien été reçu`;
     if (type === 'quote') return `Taxi Saulx les Chartreux – Votre demande de devis a bien été reçue`;
-    return `Taxi Saulx les Chartreux – Confirmation de votre rendez-vous`;
+    return `Taxi Saulx les Chartreux – Votre demande de rendez-vous a bien été reçue`;
   }
 
   // ── Corps texte admin ───────────────────────────────────────────────────────
 
   private buildAdminText(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
+    const name = [payload.firstName, payload.lastName].filter(Boolean).join(' ');
     const lines: string[] = [
-      `Nom : ${payload.firstName} ${payload.lastName}`.trim(),
+      `Nom : ${name}`,
       `Téléphone : ${payload.phone}`,
     ];
 
@@ -188,7 +152,7 @@ export class NotificationService {
       lines.push(
         `Départ : ${q.departure}`,
         `Arrivée : ${q.arrival}`,
-        `Passagers : ${q.passengers}`,
+        `Passagers : ${String(q.passengers)}`,
         `Type de trajet : ${q.tripType}`,
       );
       if (q.note) lines.push('Notes :', q.note);
@@ -215,7 +179,7 @@ export class NotificationService {
 
     if (type === 'contact') {
       lines.push(
-        'Nous avons bien reçu votre message. Notre équipe vous répondra dans les meilleurs délais, généralement dans l\'heure.',
+        "Nous avons bien reçu votre message. Notre équipe vous répondra dans les meilleurs délais, généralement dans l'heure.",
         '',
         '— Taxi Saulx les Chartreux',
       );
@@ -229,7 +193,7 @@ export class NotificationService {
         '📍 Récapitulatif de votre demande :',
         `  Départ    : ${q.departure}`,
         `  Arrivée   : ${q.arrival}`,
-        `  Passagers : ${q.passengers}`,
+        `  Passagers : ${String(q.passengers)}`,
         `  Trajet    : ${q.tripType}`,
         '',
         '— Taxi Saulx les Chartreux | 06 50 07 86 97',
@@ -239,14 +203,14 @@ export class NotificationService {
     if (type === 'appointment') {
       const a = payload as AppointmentRequest;
       lines.push(
-        'Votre rendez-vous est confirmé. Notre chauffeur vous contactera à l\'heure choisie.',
+        "Votre demande de rendez-vous a bien été reçue. Notre chauffeur vous contactera pour confirmer le créneau.",
         '',
-        '📅 Récapitulatif de votre rendez-vous :',
+        '📅 Récapitulatif de votre demande :',
         `  Date  : ${a.selectedDateLabel}`,
         `  Heure : ${a.selectedSlot}`,
         `  Objet : ${a.subject}`,
         '',
-        'En cas d\'empêchement, merci de nous prévenir au 06 50 07 86 97.',
+        "En cas d'empêchement, merci de nous prévenir au 06 50 07 86 97.",
         '',
         '— Taxi Saulx les Chartreux | 06 50 07 86 97',
       );
@@ -258,12 +222,13 @@ export class NotificationService {
   // ── HTML admin ──────────────────────────────────────────────────────────────
 
   private buildAdminHtml(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
+    const name = [payload.firstName, payload.lastName].filter(Boolean).join(' ');
     const rows: string[] = [];
-    rows.push(this.row('Nom', `${payload.firstName} ${payload.lastName}`.trim()));
+    rows.push(this.row('Nom', name));
     rows.push(this.row('Téléphone', `<a href="tel:${this.escapeHtml(payload.phone)}" style="color:#f59e0b;font-weight:700;text-decoration:none">${this.escapeHtml(payload.phone)}</a>`, true));
 
     if ('email' in payload && payload.email) {
-      rows.push(this.row('E-mail', payload.email));
+      rows.push(this.row('E-mail', this.escapeHtml(payload.email)));
     }
 
     if (type === 'contact') {
@@ -276,7 +241,7 @@ export class NotificationService {
       const q = payload as QuoteRequest;
       rows.push(this.row('Départ', q.departure));
       rows.push(this.row('Arrivée', q.arrival));
-      rows.push(this.row('Passagers', q.passengers));
+      rows.push(this.row('Passagers', String(q.passengers)));
       rows.push(this.row('Type de trajet', q.tripType));
       if (q.note) rows.push(this.row('Notes', this.escapeHtml(q.note).replace(/\n/g, '<br>'), true));
     }
@@ -317,7 +282,7 @@ export class NotificationService {
         ${this.summaryBox([
           ['Départ', q.departure],
           ['Arrivée', q.arrival],
-          ['Passagers', q.passengers],
+          ['Passagers', String(q.passengers)],
           ['Type de trajet', q.tripType],
         ])}
       `;
@@ -326,7 +291,7 @@ export class NotificationService {
     if (type === 'appointment') {
       const a = payload as AppointmentRequest;
       body = `
-        <p>Votre rendez-vous est <strong>confirmé</strong>. Notre chauffeur vous contactera à l'heure choisie pour finaliser votre trajet.</p>
+        <p>Votre demande de rendez-vous a bien été <strong>reçue</strong>. Notre chauffeur vous contactera pour confirmer le créneau choisi.</p>
         ${this.summaryBox([
           ['Date', a.selectedDateLabel],
           ['Heure', a.selectedSlot],
@@ -342,7 +307,7 @@ export class NotificationService {
       <hr style="margin:24px 0;border:none;border-top:1px solid #e5e7eb"/>
       <div style="text-align:center">
         <p style="margin:0;font-weight:600;color:#1a1a2e">Taxi Saulx les Chartreux</p>
-        <p style="margin:4px 0;color:#6b7280;font-size:14px">📞 06 50 07 86 97 · Palaiseau, Essonne 91</p>
+        <p style="margin:4px 0;color:#6b7280;font-size:14px">📞 06 50 07 86 97 · Saulx-les-Chartreux, Essonne 91</p>
         <p style="margin:4px 0;color:#6b7280;font-size:14px">Disponible 24h/24 · 7j/7</p>
       </div>
     `);
@@ -359,7 +324,7 @@ export class NotificationService {
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)">
         <tr><td style="background:#1a1a2e;padding:20px 32px;text-align:center">
-          <span style="color:#f59e0b;font-size:22px;font-weight:700;letter-spacing:1px">TAXI <span style="color:#ffffff">PALAISEAU</span></span>
+          <span style="color:#f59e0b;font-size:22px;font-weight:700;letter-spacing:1px">TAXI <span style="color:#ffffff">SAULX LES CHARTREUX</span></span>
         </td></tr>
         <tr><td style="padding:32px">${content}</td></tr>
       </table>
@@ -386,7 +351,7 @@ export class NotificationService {
   }
 
   private escapeHtml(input?: string): string {
-    if (!input) return '';
+    if (input == null || input === '') return '';
     return String(input)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -396,14 +361,14 @@ export class NotificationService {
   }
 
   private resolveFromEmail(): string {
-    const raw = process.env.FROM_EMAIL || process.env.RESEND_FROM || '';
+    const raw = (process.env.FROM_EMAIL || process.env.RESEND_FROM || '').trim();
     if (!raw) return 'Taxi Saulx les Chartreux <onboarding@resend.dev>';
 
-    // Accepte "Nom <email>" ou "email" brut
-    const matchFull = raw.match(/^.+<[^>]+>$/);
-    if (matchFull) return raw.trim();
+    // Accepte "Nom <email@domain.com>" — valide le format complet
+    const matchFull = raw.match(/^[^<]+ <[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}>$/);
+    if (matchFull) return raw;
 
     // Adresse brute → on ajoute le nom d'affichage
-    return `Taxi Saulx les Chartreux <${raw.trim()}>`;
+    return `Taxi Saulx les Chartreux <${raw}>`;
   }
 }
