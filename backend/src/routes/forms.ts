@@ -7,8 +7,8 @@ const notificationService = new NotificationService();
 
 const contactSchema = z.object({
   firstName: z.string().trim().min(1),
-  lastName: z.string().trim().min(1),
-  email: z.string().trim().email(),
+  lastName: z.string().trim().optional().or(z.literal('')),
+  email: z.string().trim().email().optional().or(z.literal('')),
   phone: z.string().trim().min(1),
   subject: z.string().trim().min(1),
   message: z.string().trim().min(1),

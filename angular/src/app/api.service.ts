@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
 
 interface ContactPayload {
   firstName: string;
@@ -34,20 +34,28 @@ interface AppointmentPayload {
   selectedSlot: string;
 }
 
+const TIMEOUT_MS = 10000;
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = '/api';
 
   sendContact(payload: ContactPayload): Promise<void> {
-    return firstValueFrom(this.http.post<void>(`${this.baseUrl}/contact`, payload)).then(() => undefined);
+    return firstValueFrom(
+      this.http.post<void>(`${this.baseUrl}/contact`, payload).pipe(timeout(TIMEOUT_MS))
+    ).then(() => undefined);
   }
 
   sendQuote(payload: QuotePayload): Promise<void> {
-    return firstValueFrom(this.http.post<void>(`${this.baseUrl}/quote`, payload)).then(() => undefined);
+    return firstValueFrom(
+      this.http.post<void>(`${this.baseUrl}/quote`, payload).pipe(timeout(TIMEOUT_MS))
+    ).then(() => undefined);
   }
 
   sendAppointment(payload: AppointmentPayload): Promise<void> {
-    return firstValueFrom(this.http.post<void>(`${this.baseUrl}/appointment`, payload)).then(() => undefined);
+    return firstValueFrom(
+      this.http.post<void>(`${this.baseUrl}/appointment`, payload).pipe(timeout(TIMEOUT_MS))
+    ).then(() => undefined);
   }
 }

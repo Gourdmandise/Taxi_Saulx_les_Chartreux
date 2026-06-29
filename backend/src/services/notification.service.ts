@@ -155,15 +155,15 @@ export class NotificationService {
 
   private buildAdminSubject(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
     const name = `${payload.firstName} ${payload.lastName}`.trim();
-    if (type === 'contact') return `Taxi SLX – Nouveau message de contact – ${name}`;
-    if (type === 'quote') return `Taxi SLX – Nouvelle demande de devis – ${name}`;
-    return `Taxi SLX – Nouveau rendez-vous – ${name}`;
+    if (type === 'contact') return `TAXI PALAISEAU – Nouveau message de contact – ${name}`;
+    if (type === 'quote') return `TAXI PALAISEAU – Nouvelle demande de devis – ${name}`;
+    return `TAXI PALAISEAU – Nouveau rendez-vous – ${name}`;
   }
 
   private buildClientSubject(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
-    if (type === 'contact') return `Taxi SLX – Votre message a bien été reçu`;
-    if (type === 'quote') return `Taxi SLX – Votre demande de devis a bien été reçue`;
-    return `Taxi SLX – Confirmation de votre rendez-vous`;
+    if (type === 'contact') return `TAXI PALAISEAU – Votre message a bien été reçu`;
+    if (type === 'quote') return `TAXI PALAISEAU – Votre demande de devis a bien été reçue`;
+    return `TAXI PALAISEAU – Confirmation de votre rendez-vous`;
   }
 
   // ── Corps texte admin ───────────────────────────────────────────────────────
@@ -217,7 +217,7 @@ export class NotificationService {
       lines.push(
         'Nous avons bien reçu votre message. Notre équipe vous répondra dans les meilleurs délais, généralement dans l\'heure.',
         '',
-        '— Taxi SLX',
+        '— TAXI PALAISEAU',
       );
     }
 
@@ -232,7 +232,7 @@ export class NotificationService {
         `  Passagers : ${q.passengers}`,
         `  Trajet    : ${q.tripType}`,
         '',
-        '— Taxi SLX | 06 45 67 00 00',
+        '— TAXI PALAISEAU | 07 65 19 18 62',
       );
     }
 
@@ -246,9 +246,9 @@ export class NotificationService {
         `  Heure : ${a.selectedSlot}`,
         `  Objet : ${a.subject}`,
         '',
-        'En cas d\'empêchement, merci de nous prévenir au 06 45 67 00 00.',
+        'En cas d\'empêchement, merci de nous prévenir au 07 65 19 18 62.',
         '',
-        '— Taxi SLX | 06 45 67 00 00',
+        '— TAXI PALAISEAU | 07 65 19 18 62',
       );
     }
 
@@ -260,7 +260,7 @@ export class NotificationService {
   private buildAdminHtml(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
     const rows: string[] = [];
     rows.push(this.row('Nom', `${payload.firstName} ${payload.lastName}`.trim()));
-    rows.push(this.row('Téléphone', payload.phone));
+    rows.push(this.row('Téléphone', `<a href="tel:${this.escapeHtml(payload.phone)}" style="color:#f59e0b;font-weight:700;text-decoration:none">${this.escapeHtml(payload.phone)}</a>`, true));
 
     if ('email' in payload && payload.email) {
       rows.push(this.row('E-mail', payload.email));
@@ -269,7 +269,7 @@ export class NotificationService {
     if (type === 'contact') {
       const p = payload as ContactRequest;
       rows.push(this.row('Objet', p.subject));
-      rows.push(this.row('Message', p.message.replace(/\n/g, '<br>')));
+      rows.push(this.row('Message', this.escapeHtml(p.message).replace(/\n/g, '<br>'), true));
     }
 
     if (type === 'quote') {
@@ -278,7 +278,7 @@ export class NotificationService {
       rows.push(this.row('Arrivée', q.arrival));
       rows.push(this.row('Passagers', q.passengers));
       rows.push(this.row('Type de trajet', q.tripType));
-      if (q.note) rows.push(this.row('Notes', q.note.replace(/\n/g, '<br>')));
+      if (q.note) rows.push(this.row('Notes', this.escapeHtml(q.note).replace(/\n/g, '<br>'), true));
     }
 
     if (type === 'appointment') {
@@ -286,14 +286,14 @@ export class NotificationService {
       rows.push(this.row('Date', a.selectedDateLabel));
       rows.push(this.row('Heure', a.selectedSlot));
       rows.push(this.row('Objet', a.subject));
-      if (a.notes) rows.push(this.row('Notes', a.notes.replace(/\n/g, '<br>')));
+      if (a.notes) rows.push(this.row('Notes', this.escapeHtml(a.notes).replace(/\n/g, '<br>'), true));
     }
 
     return this.wrapHtml(`
-      <h2 style="color:#1a1a2e">📬 Nouvelle demande — Taxi SLX</h2>
+      <h2 style="color:#1a1a2e">📬 Nouvelle demande — TAXI PALAISEAU</h2>
       <table style="width:100%;border-collapse:collapse;font-size:15px">${rows.join('')}</table>
       <hr style="margin:24px 0;border:none;border-top:1px solid #e5e7eb"/>
-      <p style="color:#9ca3af;font-size:13px">Envoyé depuis le site Taxi SLX</p>
+      <p style="color:#9ca3af;font-size:13px">Envoyé depuis le site TAXI PALAISEAU</p>
     `);
   }
 
@@ -332,7 +332,7 @@ export class NotificationService {
           ['Heure', a.selectedSlot],
           ['Objet', a.subject],
         ])}
-        <p style="color:#6b7280;font-size:14px">En cas d'empêchement, merci de nous prévenir au <strong>06 45 67 00 00</strong>.</p>
+        <p style="color:#6b7280;font-size:14px">En cas d'empêchement, merci de nous prévenir au <strong>07 65 19 18 62</strong>.</p>
       `;
     }
 
@@ -341,8 +341,8 @@ export class NotificationService {
       ${body}
       <hr style="margin:24px 0;border:none;border-top:1px solid #e5e7eb"/>
       <div style="text-align:center">
-        <p style="margin:0;font-weight:600;color:#1a1a2e">Taxi SLX</p>
-        <p style="margin:4px 0;color:#6b7280;font-size:14px">📞 06 45 67 00 00 · Saulx-les-Chartreux, Essonne 91</p>
+        <p style="margin:0;font-weight:600;color:#1a1a2e">TAXI PALAISEAU</p>
+        <p style="margin:4px 0;color:#6b7280;font-size:14px">📞 07 65 19 18 62 · Palaiseau, Essonne 91</p>
         <p style="margin:4px 0;color:#6b7280;font-size:14px">Disponible 24h/24 · 7j/7</p>
       </div>
     `);
@@ -359,7 +359,7 @@ export class NotificationService {
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)">
         <tr><td style="background:#1a1a2e;padding:20px 32px;text-align:center">
-          <span style="color:#f59e0b;font-size:22px;font-weight:700;letter-spacing:1px">taxi-<span style="color:#ffffff">slx</span></span>
+          <span style="color:#f59e0b;font-size:22px;font-weight:700;letter-spacing:1px">TAXI <span style="color:#ffffff">PALAISEAU</span></span>
         </td></tr>
         <tr><td style="padding:32px">${content}</td></tr>
       </table>
@@ -369,10 +369,10 @@ export class NotificationService {
 </html>`;
   }
 
-  private row(label: string, value: string): string {
+  private row(label: string, value: string, isHtml = false): string {
     return `<tr>
       <td style="padding:8px 12px;background:#f9fafb;font-weight:600;width:35%;border:1px solid #e5e7eb">${this.escapeHtml(label)}</td>
-      <td style="padding:8px 12px;border:1px solid #e5e7eb">${this.escapeHtml(value)}</td>
+      <td style="padding:8px 12px;border:1px solid #e5e7eb">${isHtml ? value : this.escapeHtml(value)}</td>
     </tr>`;
   }
 
@@ -397,13 +397,13 @@ export class NotificationService {
 
   private resolveFromEmail(): string {
     const raw = process.env.FROM_EMAIL || process.env.RESEND_FROM || '';
-    if (!raw) return 'Taxi SLX <onboarding@resend.dev>';
+    if (!raw) return 'TAXI PALAISEAU <onboarding@resend.dev>';
 
     // Accepte "Nom <email>" ou "email" brut
     const matchFull = raw.match(/^.+<[^>]+>$/);
     if (matchFull) return raw.trim();
 
     // Adresse brute → on ajoute le nom d'affichage
-    return `Taxi SLX <${raw.trim()}>`;
+    return `TAXI PALAISEAU <${raw.trim()}>`;
   }
 }

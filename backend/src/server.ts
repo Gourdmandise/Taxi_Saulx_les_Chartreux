@@ -3,6 +3,7 @@ import 'dotenv/config';
 import cors from 'cors';
 import express, { type NextFunction, type Request, type Response } from 'express';
 import helmet from 'helmet';
+import { ZodError } from 'zod'; // ✅ CORRIGÉ : import explicite pour instanceof
 import { formsRouter } from './routes/forms.js';
 
 const app = express();
@@ -24,12 +25,9 @@ app.get('/health', (_req, res) => {
 
 app.use('/api', formsRouter);
 
+// ✅ CORRIGÉ : doublon supprimé, instanceof ZodError fiable et propre
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  if (error instanceof Error && 'name' in error && error.name === 'ZodError') {
-    return res.status(400).json({ ok: false, message: 'Données invalides.' });
-  }
-
-  if (error instanceof Error && error.name === 'ZodError') {
+  if (error instanceof ZodError) {
     return res.status(400).json({ ok: false, message: 'Données invalides.' });
   }
 
