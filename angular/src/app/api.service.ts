@@ -37,9 +37,9 @@ interface AppointmentPayload {
 const TIMEOUT_MS = 10000;
 
 const isProd = window.location.hostname !== 'localhost';
-const BACKEND_URL = isProd
-  ? 'https://taxi-saulx-les-chartreux.onrender.com'  // ← remplace par ton URL Render
-  : '';
+const BACKEND_URL = window.location.hostname === 'localhost'
+  ? ''
+  : 'https://taxi-saulx-les-chartreux.onrender.com';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
