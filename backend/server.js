@@ -38,7 +38,6 @@ app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
 app.listen(port, () => {
   console.log(`Taxi backend listening on http://localhost:${port}`);
 
-  // Keep-alive : ping toutes les 10 minutes pour éviter l'endormissement Render
   const backendUrl = process.env.RENDER_EXTERNAL_URL;
   if (backendUrl) {
     setInterval(async () => {
