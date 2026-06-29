@@ -1,7 +1,7 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/taxi-tour",
+  "outputDirectory": "dist/taxi-tour/browser",
   "rewrites": [
     {
       "source": "/(.*)",
