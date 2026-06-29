@@ -155,15 +155,15 @@ export class NotificationService {
 
   private buildAdminSubject(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
     const name = `${payload.firstName} ${payload.lastName}`.trim();
-    if (type === 'contact') return `TAXI PALAISEAU – Nouveau message de contact – ${name}`;
-    if (type === 'quote') return `TAXI PALAISEAU – Nouvelle demande de devis – ${name}`;
-    return `TAXI PALAISEAU – Nouveau rendez-vous – ${name}`;
+    if (type === 'contact') return `Taxi Saulx les Chartreux – Nouveau message de contact – ${name}`;
+    if (type === 'quote') return `Taxi Saulx les Chartreux – Nouvelle demande de devis – ${name}`;
+    return `Taxi Saulx les Chartreux – Nouveau rendez-vous – ${name}`;
   }
 
   private buildClientSubject(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
-    if (type === 'contact') return `TAXI PALAISEAU – Votre message a bien été reçu`;
-    if (type === 'quote') return `TAXI PALAISEAU – Votre demande de devis a bien été reçue`;
-    return `TAXI PALAISEAU – Confirmation de votre rendez-vous`;
+    if (type === 'contact') return `Taxi Saulx les Chartreux – Votre message a bien été reçu`;
+    if (type === 'quote') return `Taxi Saulx les Chartreux – Votre demande de devis a bien été reçue`;
+    return `Taxi Saulx les Chartreux – Confirmation de votre rendez-vous`;
   }
 
   // ── Corps texte admin ───────────────────────────────────────────────────────
@@ -217,7 +217,7 @@ export class NotificationService {
       lines.push(
         'Nous avons bien reçu votre message. Notre équipe vous répondra dans les meilleurs délais, généralement dans l\'heure.',
         '',
-        '— TAXI PALAISEAU',
+        '— Taxi Saulx les Chartreux',
       );
     }
 
@@ -232,7 +232,7 @@ export class NotificationService {
         `  Passagers : ${q.passengers}`,
         `  Trajet    : ${q.tripType}`,
         '',
-        '— TAXI PALAISEAU | 07 65 19 18 62',
+        '— Taxi Saulx les Chartreux | 06 50 07 86 97',
       );
     }
 
@@ -246,9 +246,9 @@ export class NotificationService {
         `  Heure : ${a.selectedSlot}`,
         `  Objet : ${a.subject}`,
         '',
-        'En cas d\'empêchement, merci de nous prévenir au 07 65 19 18 62.',
+        'En cas d\'empêchement, merci de nous prévenir au 06 50 07 86 97.',
         '',
-        '— TAXI PALAISEAU | 07 65 19 18 62',
+        '— Taxi Saulx les Chartreux | 06 50 07 86 97',
       );
     }
 
@@ -290,10 +290,10 @@ export class NotificationService {
     }
 
     return this.wrapHtml(`
-      <h2 style="color:#1a1a2e">📬 Nouvelle demande — TAXI PALAISEAU</h2>
+      <h2 style="color:#1a1a2e">📬 Nouvelle demande — Taxi Saulx les Chartreux</h2>
       <table style="width:100%;border-collapse:collapse;font-size:15px">${rows.join('')}</table>
       <hr style="margin:24px 0;border:none;border-top:1px solid #e5e7eb"/>
-      <p style="color:#9ca3af;font-size:13px">Envoyé depuis le site TAXI PALAISEAU</p>
+      <p style="color:#9ca3af;font-size:13px">Envoyé depuis le site Taxi Saulx les Chartreux</p>
     `);
   }
 
@@ -332,7 +332,7 @@ export class NotificationService {
           ['Heure', a.selectedSlot],
           ['Objet', a.subject],
         ])}
-        <p style="color:#6b7280;font-size:14px">En cas d'empêchement, merci de nous prévenir au <strong>07 65 19 18 62</strong>.</p>
+        <p style="color:#6b7280;font-size:14px">En cas d'empêchement, merci de nous prévenir au <strong>06 50 07 86 97</strong>.</p>
       `;
     }
 
@@ -341,8 +341,8 @@ export class NotificationService {
       ${body}
       <hr style="margin:24px 0;border:none;border-top:1px solid #e5e7eb"/>
       <div style="text-align:center">
-        <p style="margin:0;font-weight:600;color:#1a1a2e">TAXI PALAISEAU</p>
-        <p style="margin:4px 0;color:#6b7280;font-size:14px">📞 07 65 19 18 62 · Palaiseau, Essonne 91</p>
+        <p style="margin:0;font-weight:600;color:#1a1a2e">Taxi Saulx les Chartreux</p>
+        <p style="margin:4px 0;color:#6b7280;font-size:14px">📞 06 50 07 86 97 · Palaiseau, Essonne 91</p>
         <p style="margin:4px 0;color:#6b7280;font-size:14px">Disponible 24h/24 · 7j/7</p>
       </div>
     `);
@@ -397,13 +397,13 @@ export class NotificationService {
 
   private resolveFromEmail(): string {
     const raw = process.env.FROM_EMAIL || process.env.RESEND_FROM || '';
-    if (!raw) return 'TAXI PALAISEAU <onboarding@resend.dev>';
+    if (!raw) return 'Taxi Saulx les Chartreux <onboarding@resend.dev>';
 
     // Accepte "Nom <email>" ou "email" brut
     const matchFull = raw.match(/^.+<[^>]+>$/);
     if (matchFull) return raw.trim();
 
     // Adresse brute → on ajoute le nom d'affichage
-    return `TAXI PALAISEAU <${raw.trim()}>`;
+    return `Taxi Saulx les Chartreux <${raw.trim()}>`;
   }
 }
