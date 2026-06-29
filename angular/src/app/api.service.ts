@@ -36,10 +36,15 @@ interface AppointmentPayload {
 
 const TIMEOUT_MS = 10000;
 
+const isProd = window.location.hostname !== 'localhost';
+const BACKEND_URL = isProd
+  ? 'https://TON-BACKEND.onrender.com'  // ← remplace par ton URL Render
+  : '';
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = '/api';
+  private readonly baseUrl = `${BACKEND_URL}/api`;
 
   sendContact(payload: ContactPayload): Promise<void> {
     return firstValueFrom(
