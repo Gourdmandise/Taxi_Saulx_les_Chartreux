@@ -634,3 +634,15 @@
   </div>
 </main>
 }
+
+<!-- ===== POP-UP CONFIRMATION D'ENVOI ===== -->
+@if (showConfirmModal) {
+<div class="confirm-overlay" (click)="closeConfirmModal()">
+  <div class="confirm-modal" (click)="$event.stopPropagation()">
+    <div class="confirm-icon">✅</div>
+    <h3>Demande envoyée !</h3>
+    <p>{{ confirmModalText }}</p>
+    <button class="btn-primary" type="button" (click)="closeConfirmModal()">Fermer</button>
+  </div>
+</div>
+}

@@ -30,6 +30,10 @@ export class App implements OnInit, OnDestroy {
   protected quoteLoading = false;
   protected appointmentLoading = false;
 
+  // ── Pop-up de confirmation (remplace l'e-mail de confirmation client) ──────
+  protected showConfirmModal = false;
+  protected confirmModalText = '';
+
   protected contactForm = { firstName: '', lastName: '', email: '', phone: '', subject: '', message: '' };
   protected quoteForm = { firstName: '', lastName: '', departure: '', arrival: '', passengers: '1 passager', tripType: 'Standard', phone: '', email: '', note: '' };
   protected appointmentForm = { firstName: '', lastName: '', phone: '', email: '', subject: "Réservation d'un trajet", notes: '' };
@@ -411,6 +415,16 @@ export class App implements OnInit, OnDestroy {
 
   // ── Formulaires ───────────────────────────────────────────────────────────
 
+  /** Affiche la pop-up de confirmation d'envoi (remplace la confirmation par e-mail) */
+  protected openConfirmModal(message: string): void {
+    this.confirmModalText = message;
+    this.showConfirmModal = true;
+  }
+
+  protected closeConfirmModal(): void {
+    this.showConfirmModal = false;
+  }
+
   // Formulaire page Contact
   protected async submitContact(): Promise<void> {
     if (this.contactLoading) return;
@@ -439,6 +453,7 @@ export class App implements OnInit, OnDestroy {
     try {
       await this.apiService.sendContact(f);
       this.contactSent = true;
+      this.openConfirmModal('Votre message a bien été envoyé. Notre équipe vous répondra dans les meilleurs délais.');
     } catch {
       alert('Envoi impossible. Vérifiez votre connexion ou réessayez.');
     } finally {
@@ -478,6 +493,7 @@ export class App implements OnInit, OnDestroy {
     try {
       await this.apiService.sendQuote(f);
       this.quoteSent = true;
+      this.openConfirmModal('Votre demande de devis a bien été envoyée. Vous recevrez une estimation rapidement.');
     } catch {
       alert('Envoi impossible. Vérifiez votre connexion ou réessayez.');
     } finally {
@@ -532,6 +548,7 @@ export class App implements OnInit, OnDestroy {
     try {
       await this.apiService.sendAppointment({ ...f, selectedDateLabel: this.selectedDateLabel, selectedSlot: this.selectedSlot });
       this.goStep(4);
+      this.openConfirmModal('Votre demande de rendez-vous a bien été envoyée. Notre chauffeur vous contactera pour confirmer le créneau.');
     } catch {
       alert('Erreur d\'envoi. Vérifiez votre connexion ou réessayez.');
     } finally {

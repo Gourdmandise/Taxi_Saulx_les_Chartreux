@@ -37,48 +37,31 @@ export class NotificationService {
     // ── Mail admin ────────────────────────────────────────────────────────────
     if (!adminEmail) {
       console.info(`[${type.toUpperCase()}] Aucun ADMIN_EMAIL configuré — payload :`, JSON.stringify(payload, null, 2));
-    } else {
-      const adminSubject = this.buildAdminSubject(type, payload);
-      const adminText = this.buildAdminText(type, payload);
-      const adminHtml = this.buildAdminHtml(type, payload);
-
-      try {
-        await this.dispatch({
-          from: fromEmail,
-          to: adminEmail,
-          replyTo: clientEmail ?? fromEmail,
-          subject: adminSubject,
-          text: adminText,
-          html: adminHtml,
-          attachments,
-        });
-      } catch (err) {
-        // Un échec d'envoi admin ne doit jamais empêcher l'envoi de la confirmation client
-        console.error(`✗ Échec envoi notification admin (${adminEmail}) :`, err);
-      }
+      return;
     }
 
-    // ── Mail de confirmation client ───────────────────────────────────────────
-    if (clientEmail) {
-      const clientSubject = this.buildClientSubject(type, payload);
-      const clientText = this.buildClientText(type, payload);
-      const clientHtml = this.buildClientHtml(type, payload);
+    const adminSubject = this.buildAdminSubject(type, payload);
+    const adminText = this.buildAdminText(type, payload);
+    const adminHtml = this.buildAdminHtml(type, payload);
 
-      try {
-        await this.dispatch({
-          from: fromEmail,
-          to: clientEmail,
-          replyTo: adminEmail ?? fromEmail,
-          subject: clientSubject,
-          text: clientText,
-          html: clientHtml,
-        });
-        console.log(`✉  Confirmation envoyée au client : ${clientEmail}`);
-      } catch (err) {
-        // L'admin a déjà été notifié — on log sans bloquer la réponse HTTP
-        console.error(`✗ Échec envoi confirmation client (${clientEmail}) :`, err);
-      }
+    try {
+      await this.dispatch({
+        from: fromEmail,
+        to: adminEmail,
+        replyTo: clientEmail ?? fromEmail,
+        subject: adminSubject,
+        text: adminText,
+        html: adminHtml,
+        attachments,
+      });
+    } catch (err) {
+      // On logue l'échec mais on ne fait jamais planter la requête HTTP :
+      // côté frontend, l'utilisateur voit une confirmation quoi qu'il arrive.
+      console.error(`✗ Échec envoi notification admin (${adminEmail}) :`, err);
     }
+
+    // Aucun e-mail de confirmation n'est envoyé au client — remplacé par
+    // une pop-up de confirmation côté frontend (voir app.ts / app.html).
   }
 
   // ── Dispatcher interne ──────────────────────────────────────────────────────
@@ -128,12 +111,6 @@ export class NotificationService {
     return `Taxi Saulx les Chartreux – Nouveau rendez-vous – ${name}`;
   }
 
-  private buildClientSubject(type: 'contact' | 'quote' | 'appointment', _payload: Payload): string {
-    if (type === 'contact') return `Taxi Saulx les Chartreux – Votre message a bien été reçu`;
-    if (type === 'quote') return `Taxi Saulx les Chartreux – Votre demande de devis a bien été reçue`;
-    return `Taxi Saulx les Chartreux – Votre demande de rendez-vous a bien été reçue`;
-  }
-
   // ── Corps texte admin ───────────────────────────────────────────────────────
 
   private buildAdminText(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
@@ -171,54 +148,6 @@ export class NotificationService {
         `Objet : ${a.subject}`,
       );
       if (a.notes) lines.push('Notes :', a.notes);
-    }
-
-    return lines.join('\n');
-  }
-
-  // ── Corps texte client ──────────────────────────────────────────────────────
-
-  private buildClientText(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
-    const name = payload.firstName;
-    const lines: string[] = [`Bonjour ${name},`, ''];
-
-    if (type === 'contact') {
-      lines.push(
-        "Nous avons bien reçu votre message. Notre équipe vous répondra dans les meilleurs délais, généralement dans l'heure.",
-        '',
-        '— Taxi Saulx les Chartreux',
-      );
-    }
-
-    if (type === 'quote') {
-      const q = payload as QuoteRequest;
-      lines.push(
-        'Votre demande de devis a bien été enregistrée. Nous vous contacterons rapidement avec une estimation précise.',
-        '',
-        '📍 Récapitulatif de votre demande :',
-        `  Départ    : ${q.departure}`,
-        `  Arrivée   : ${q.arrival}`,
-        `  Passagers : ${String(q.passengers)}`,
-        `  Trajet    : ${q.tripType}`,
-        '',
-        '— Taxi Saulx les Chartreux | 06 50 07 86 97',
-      );
-    }
-
-    if (type === 'appointment') {
-      const a = payload as AppointmentRequest;
-      lines.push(
-        "Votre demande de rendez-vous a bien été reçue. Notre chauffeur vous contactera pour confirmer le créneau.",
-        '',
-        '📅 Récapitulatif de votre demande :',
-        `  Date  : ${a.selectedDateLabel}`,
-        `  Heure : ${a.selectedSlot}`,
-        `  Objet : ${a.subject}`,
-        '',
-        "En cas d'empêchement, merci de nous prévenir au 06 50 07 86 97.",
-        '',
-        '— Taxi Saulx les Chartreux | 06 50 07 86 97',
-      );
     }
 
     return lines.join('\n');
@@ -264,57 +193,6 @@ export class NotificationService {
       <table style="width:100%;border-collapse:collapse;font-size:15px">${rows.join('')}</table>
       <hr style="margin:24px 0;border:none;border-top:1px solid #e5e7eb"/>
       <p style="color:#9ca3af;font-size:13px">Envoyé depuis le site Taxi Saulx les Chartreux</p>
-    `);
-  }
-
-  // ── HTML client ─────────────────────────────────────────────────────────────
-
-  private buildClientHtml(type: 'contact' | 'quote' | 'appointment', payload: Payload): string {
-    const name = this.escapeHtml(payload.firstName);
-    let body = '';
-
-    if (type === 'contact') {
-      body = `
-        <p>Nous avons bien reçu votre message et nous vous en remercions.</p>
-        <p>Notre équipe vous répondra dans les meilleurs délais, <strong>généralement dans l'heure</strong>.</p>
-      `;
-    }
-
-    if (type === 'quote') {
-      const q = payload as QuoteRequest;
-      body = `
-        <p>Votre demande de devis a bien été enregistrée. Nous vous contacterons très rapidement avec une <strong>estimation gratuite et sans engagement</strong>.</p>
-        ${this.summaryBox([
-          ['Départ', q.departure],
-          ['Arrivée', q.arrival],
-          ['Passagers', String(q.passengers)],
-          ['Type de trajet', q.tripType],
-        ])}
-      `;
-    }
-
-    if (type === 'appointment') {
-      const a = payload as AppointmentRequest;
-      body = `
-        <p>Votre demande de rendez-vous a bien été <strong>reçue</strong>. Notre chauffeur vous contactera pour confirmer le créneau choisi.</p>
-        ${this.summaryBox([
-          ['Date', a.selectedDateLabel],
-          ['Heure', a.selectedSlot],
-          ['Objet', a.subject],
-        ])}
-        <p style="color:#6b7280;font-size:14px">En cas d'empêchement, merci de nous prévenir au <strong>06 50 07 86 97</strong>.</p>
-      `;
-    }
-
-    return this.wrapHtml(`
-      <h2 style="color:#1a1a2e">Bonjour ${name},</h2>
-      ${body}
-      <hr style="margin:24px 0;border:none;border-top:1px solid #e5e7eb"/>
-      <div style="text-align:center">
-        <p style="margin:0;font-weight:600;color:#1a1a2e">Taxi Saulx les Chartreux</p>
-        <p style="margin:4px 0;color:#6b7280;font-size:14px">📞 06 50 07 86 97 · Saulx-les-Chartreux, Essonne 91</p>
-        <p style="margin:4px 0;color:#6b7280;font-size:14px">Disponible 24h/24 · 7j/7</p>
-      </div>
     `);
   }
 

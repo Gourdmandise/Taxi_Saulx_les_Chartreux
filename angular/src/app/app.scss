@@ -470,3 +470,58 @@ img { max-width: 100%; display: block; }
   .footer-inner { grid-template-columns: 1fr; }
   .reveal-slider { border-radius: 10px; }
 }
+
+/* ============================================================
+   POP-UP CONFIRMATION D'ENVOI
+   ============================================================ */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,11,0.72);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1.5rem;
+  animation: confirmFadeIn 0.2s ease-out;
+}
+
+.confirm-modal {
+  background: var(--dark-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem 2rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  animation: confirmPopIn 0.25s ease-out;
+}
+
+.confirm-icon { font-size: 2.75rem; margin-bottom: 0.75rem; }
+
+.confirm-modal h3 {
+  font-size: 1.3rem;
+  color: var(--white);
+  margin-bottom: 0.6rem;
+}
+
+.confirm-modal p {
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.confirm-modal .btn-primary { width: 100%; }
+
+@keyframes confirmFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes confirmPopIn {
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
