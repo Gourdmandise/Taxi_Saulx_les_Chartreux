@@ -122,7 +122,7 @@ export class App implements OnInit, OnDestroy {
   private statsObserver?: IntersectionObserver;
   protected displayStats: DisplayStat[] = [
     { display: '0+', label: 'Courses réalisées', target: 12000, suffix: '+', prefix: '' },
-    { display: '4,9', label: 'Note Google / 5', target: 49, suffix: '', prefix: '' },
+    { display: '5,0', label: 'Note Google / 5', target: 50, suffix: '', prefix: '' },
     { display: '0 €', label: 'Frais annulation', target: 0, suffix: ' €', prefix: '' },
     { display: '0', label: 'Heures sur 24 disponible', target: 24, suffix: '', prefix: '' },
   ];
@@ -134,39 +134,37 @@ export class App implements OnInit, OnDestroy {
   // ── Données affichage ─────────────────────────────────────────────────────
   protected readonly heroStats = [
     { value: '+12 000', label: 'Courses réalisées' },
-    { value: 'Tarif fixe', label: 'Annoncé à la réservation' },
-    { value: '4,9 / 5', label: '1 240 avis Google' },
+    { value: '5/5', label: '1 675 avis Google' },
   ];
 
   protected readonly bandItems = [
-    { icon: '✈️', text: 'Aéroports', highlight: 'CDG · Orly · Le Bourget' },
-    { icon: '💳', text: 'Tarif fixe', highlight: 'annoncé à la réservation' },
-    { icon: '⭐', text: 'Note Google', highlight: '4,9/5 · 1 240 avis' },
+    { icon: '✈️', text: 'Aéroports', highlight: 'CDG · Orly · Beauvais' },
+    { icon: '⭐', text: 'Note Google', highlight: '5/5 · 1 675 avis' },
     { icon: '🔒', text: 'Annulation', highlight: 'gratuite jusqu\'à 1h avant' },
   ];
 
   protected readonly vehicleCards = [
-    { img: '/IMAGE_PAGE_D_ACCEUIL_TP_5808a54e.png', name: 'Berline', description: 'Berline haut de gamme, confort feutré et finitions cuir. Idéale pour vos trajets d\'affaires et transferts aéroport.' },
+    { img: '/IMAGE_PAGE_D_ACCEUIL_TP_5808a54e.png', name: 'SUV', description: 'SUV haut de gamme, confort feutré et finitions cuir. Idéale pour vos trajets d\'affaires et transferts aéroport.' },
     { img: '/Capture_decran_2026-06-23_a_13.02.11_db86926f.png', name: 'Van Mercedes', description: 'Van spacieux jusqu\'à 7 passagers avec leurs bagages. Parfait pour les groupes, familles et transferts aéroport.' },
     { img: '/Capture_decran_2026-06-23_a_13.22.35_d980e239.png', name: 'Berline haut de gamme', description: 'L\'élégance Mercedes pour vos événements et déplacements VIP. Chauffeur en tenue, prestation haut de gamme.' },
   ];
 
   protected readonly excellenceItems = [
-    'Tarif fixe annoncé à la réservation',
-    'Chauffeur professionnel diplômé',
+    'Partenariat en compte entreprise',
     'Véhicule premium, eau & chargeur offerts',
-    'Suivi en temps réel, ponctualité garantie',
+    'Gestion de flotte pour vos événements et séminaires, en partenariat avec un groupement de taxis',
+    'Vos trajets particuliers, professionnels et colis de valeur',
   ];
 
   protected readonly trustCards = [
     { icon: '🎩', title: 'Entreprises', description: 'Dirigeants, diplomates, voyageurs d\'affaires. Escorte rapprochée possible.' },
-    { icon: '💍', title: 'Événements', description: 'Mariages, galas, lancements — une attention portée à chaque détail.' },
-    { icon: '✈️', title: 'Transfert aéroport', description: 'CDG, Orly, Le Bourget. Suivi vol en temps réel, attente offerte 60 min.' },
+    { icon: '💍', title: 'Événements', description: 'Séminaires, galas, lancements — une attention portée à chaque détail.' },
+    { icon: '✈️', title: 'Transfert aéroport & gares', description: 'CDG, Orly, Beauvais. Suivi des vols et trains en temps réel.' },
   ];
 
   protected readonly howSteps = [
-    { num: '01', title: 'La réservation', description: 'Par téléphone ou formulaire — 30 secondes.' },
-    { num: '02', title: 'La confirmation', description: 'Tarif fixe immédiat, nom et plaque du chauffeur.' },
+    { num: '01', title: 'La réservation', description: 'Par téléphone ou formulaire — 2 minutes.' },
+    { num: '02', title: 'La confirmation', description: 'Confirmation immédiate, nom et plaque du chauffeur.' },
     { num: '03', title: 'La prise en charge', description: 'Chauffeur 5 min en avance, accueil soigné.' },
     { num: '04', title: 'L\'arrivée', description: 'Dépose à l\'adresse, reçu par SMS.' },
   ];
@@ -174,7 +172,6 @@ export class App implements OnInit, OnDestroy {
   protected readonly airportFeatures = [
     { title: 'Suivi des vols et trains en temps réel', description: 'En cas de retard ou changement de terminal, l\'heure s\'ajuste automatiquement — sans surcoût.' },
     { title: 'Accueil personnalisé avec pancarte', description: 'Votre chauffeur vous attend au point de rencontre et prend soin de vos bagages.' },
-    { title: 'Temps d\'attente offert', description: 'Jusqu\'à 60 minutes d\'attente incluses après l\'atterrissage.' },
   ];
 
   protected readonly reviews = [
@@ -185,24 +182,24 @@ export class App implements OnInit, OnDestroy {
 
   protected readonly guarantees = [
     { icon: '⏰', title: 'Ponctualité garantie', subtitle: '−10 % si retard +10 min' },
-    { icon: '✅', title: 'Chauffeur vérifié', subtitle: 'Carte VTC, casier vierge' },
-    { icon: '💰', title: 'Tarif fixe garanti', subtitle: 'Annoncé à la résa' },
+    { icon: '✅', title: 'Chauffeur vérifié', subtitle: 'Carte Taxi' },
+    { icon: '💰', title: 'Tarif transparent', subtitle: 'Aucun frais caché' },
     { icon: '🕐', title: 'Disponible 24/7', subtitle: 'Jour, nuit, week-end' },
   ];
 
   protected readonly faqItems = [
-    { q: 'Quels sont vos tarifs ?', a: 'Le tarif est fixe et annoncé à la réservation : il dépend du trajet, du véhicule et de l\'heure. Aucun supplément caché. À partir de 45 € la course intra-Paris, 75 € pour Roissy CDG.' },
+    { q: 'Quels sont vos tarifs ?', a: 'Le tarif dépend du trajet, du véhicule et de l\'heure (voir notre grille tarifaire). Aucun supplément caché. À partir de 45 € la course intra-Paris, 75 € pour Roissy CDG.' },
     { q: 'Travaillez-vous partout en France ?', a: 'Île-de-France 24/7 sans préavis. Province et longue distance sur réservation (idéalement 24h à l\'avance). Trajets internationaux possibles (Bruxelles, Londres, Genève) — devis dédié.' },
-    { q: 'Comment puis-je payer ?', a: 'Carte bancaire, virement, espèces ou Apple Pay. Facture professionnelle remise par mail. Possibilité d\'ouvrir un compte entreprise (paiement mensualisé).' },
-    { q: 'Et si j\'ai besoin d\'annuler ?', a: 'Annulation gratuite jusqu\'à 1h avant la prise en charge. Au-delà, 50 % du tarif. En cas de retard de notre fait, le trajet est offert.' },
+    { q: 'Comment puis-je payer ?', a: 'Carte bancaire, espèces ou Apple Pay. Facture professionnelle remise par mail. Possibilité d\'ouvrir un compte entreprise (paiement mensualisé).' },
+    { q: 'Et si j\'ai besoin d\'annuler ?', a: 'Annulation gratuite jusqu\'à 1h avant la prise en charge. Au-delà, 50 % du tarif.' },
     { q: 'Le véhicule est-il toujours le même ?', a: 'Pour les clients réguliers, oui — on vous attribue un chauffeur et un véhicule de référence. Pour les nouveaux clients, vous choisissez la catégorie ; le modèle exact est confirmé à la réservation.' },
   ];
 
-  protected readonly zones = ['Palaiseau','Massy','Les Ulis','Gif-sur-Yvette','Orsay','Paris-Saclay','Saint-Rémy-lès-Chevreuse','Magny-les-Hameaux','Buc','Villebon-sur-Yvette','Aéroport de Roissy CDG','Aéroport de Orly','Bures-sur-Yvette','Saint-Aubin','Villejust','Nozay','Jouy-en-Josas','Châteaufort','Saclay','Bièvres','Igny','Villiers-le-Bâcle','Marcoussis','Limours','Briis-sous-Forges','Dourdan','Les Molières','Verrières-le-Buisson','Gare du Nord','Gare de l\'Est','Gare de Lyon','Gare d\'Austerlitz','Gare Montparnasse','Gare Saint-Lazare','Province'];
+  protected readonly zones = ['Aéroport de Roissy CDG','Aéroport de Orly','Aéroport de Beauvais','Gare du Nord','Gare de l\'Est','Gare de Lyon','Gare d\'Austerlitz','Gare Montparnasse','Gare Saint-Lazare','Saulx-les-Chartreux','Massy','Les Ulis','Gif-sur-Yvette','Orsay','Saint-Rémy-lès-Chevreuse','Villebon-sur-Yvette','Bures-sur-Yvette','Villejust','Nozay','Saclay','Bièvres','Igny','Marcoussis','Limours','Briis-sous-Forges','Les Molières','Province'];
 
   protected readonly contactCards: ContactCard[] = [
     { icon: '📞', title: 'Téléphone', text: '06 50 07 86 97 — disponible 24h/24, 7j/7' },
-    { icon: '📍', title: 'Localisation', text: 'Palaiseau · Essonne 91' },
+    { icon: '📍', title: 'Localisation', text: 'Saulx-les-Chartreux · Essonne 91' },
     { icon: '🕐', title: 'Disponibilité', text: '24h/24 · 7j/7 · Week-ends et jours fériés inclus' },
   ];
 
@@ -292,7 +289,7 @@ export class App implements OnInit, OnDestroy {
           const val = Math.round(progress * 12000);
           return { ...s, display: '+' + val.toLocaleString('fr-FR') };
         } else if (i === 1) {
-          const val = (progress * 4.9).toFixed(1);
+          const val = (progress * 5).toFixed(1);
           return { ...s, display: val.replace('.', ',') };
         } else if (i === 2) {
           return { ...s, display: '0 €' };
@@ -303,7 +300,7 @@ export class App implements OnInit, OnDestroy {
       if (step >= steps) {
         clearInterval(interval);
         this.displayStats[0].display = '+12 000';
-        this.displayStats[1].display = '4,9';
+        this.displayStats[1].display = '5,0';
         this.displayStats[3].display = '24';
       }
     }, 1000 / fps);
