@@ -432,7 +432,7 @@
           </select>
         </div>
         <div class="form-group"><label>Message *</label><textarea rows="5" placeholder="Votre message…" [(ngModel)]="contactForm.message"></textarea></div>
-        <button class="submit-btn" type="button" (click)="submitContact()" [disabled]="contactLoading">{{ contactLoading ? 'Envoi en cours…' : '✉️ ENVOYER LE MESSAGE' }}</button>
+        <button class="submit-btn" type="button" (click)="submitContact()" [disabled]="contactLoading">{{ contactLoading ? 'Envoi en cours… (max 10s)' : '✉️ ENVOYER LE MESSAGE' }}</button>
         <p class="form-note">🔒 Vos données sont confidentielles.</p>
       } @else {
         <div class="success-box">
@@ -515,7 +515,7 @@
         <div class="form-group"><label>E-mail</label><input type="email" placeholder="jean@exemple.fr" [(ngModel)]="quoteForm.email"
           maxlength="100" inputmode="email" /></div>
         <div class="form-group"><label>Informations complémentaires</label><textarea rows="3" placeholder="Date, heure, bagages…" [(ngModel)]="quoteForm.note"></textarea></div>
-        <button class="submit-btn" type="button" (click)="submitQuote()" [disabled]="quoteLoading">{{ quoteLoading ? 'Envoi en cours…' : '💰 OBTENIR MON ESTIMATION GRATUITE' }}</button>
+        <button class="submit-btn" type="button" (click)="submitQuote()" [disabled]="quoteLoading">{{ quoteLoading ? 'Envoi en cours… (max 10s)' : '💰 OBTENIR MON ESTIMATION GRATUITE' }}</button>
         <p class="form-note">🔒 Devis gratuit · Sans engagement</p>
       } @else {
         <div class="success-box">
@@ -611,7 +611,7 @@
             </select>
           </div>
           <div class="form-group"><label>Notes (optionnel)</label><textarea rows="3" placeholder="Informations utiles…" [(ngModel)]="appointmentForm.notes"></textarea></div>
-          <button class="submit-btn" type="button" (click)="confirmAppointment()" [disabled]="appointmentLoading">{{ appointmentLoading ? 'Confirmation en cours…' : '📅 CONFIRMER LE RENDEZ-VOUS' }}</button>
+          <button class="submit-btn" type="button" (click)="confirmAppointment()" [disabled]="appointmentLoading">{{ appointmentLoading ? 'Confirmation en cours… (max 10s)' : '📅 CONFIRMER LE RENDEZ-VOUS' }}</button>
         </div>
       }
       @if (appointmentStep === 4) {
