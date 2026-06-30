@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from './api.service';
 
@@ -213,7 +213,10 @@ export class App implements OnInit, OnDestroy {
     { icon: '🛣️', title: 'Toutes distances', description: 'Déplacement local, aéroport, longue distance ou mise à disposition.' },
   ];
 
-  constructor(private readonly apiService: ApiService) {}
+  constructor(
+    private readonly apiService: ApiService,
+    private readonly ngZone: NgZone,
+  ) {}
 
   ngOnInit(): void {
     this.initCalendar();
@@ -417,8 +420,13 @@ export class App implements OnInit, OnDestroy {
 
   /** Affiche la pop-up de confirmation d'envoi (remplace la confirmation par e-mail) */
   protected openConfirmModal(message: string): void {
-    this.confirmModalText = message;
-    this.showConfirmModal = true;
+    // ngZone.run garantit que le changement d'état déclenche bien un cycle
+    // de détection de changement Angular immédiatement, même si la promesse
+    // HTTP (timeout RxJS) s'est résolue en dehors de la zone Angular.
+    this.ngZone.run(() => {
+      this.confirmModalText = message;
+      this.showConfirmModal = true;
+    });
   }
 
   protected closeConfirmModal(): void {
@@ -452,12 +460,16 @@ export class App implements OnInit, OnDestroy {
     this.contactLoading = true;
     try {
       await this.apiService.sendContact(f);
-      this.contactSent = true;
+      this.ngZone.run(() => {
+        this.contactSent = true;
+        this.contactLoading = false;
+      });
       this.openConfirmModal('Votre message a bien été envoyé. Notre équipe vous répondra dans les meilleurs délais.');
     } catch {
+      this.ngZone.run(() => {
+        this.contactLoading = false;
+      });
       alert('Envoi impossible. Vérifiez votre connexion ou réessayez.');
-    } finally {
-      this.contactLoading = false;
     }
   }
 
@@ -492,12 +504,16 @@ export class App implements OnInit, OnDestroy {
     this.quoteLoading = true;
     try {
       await this.apiService.sendQuote(f);
-      this.quoteSent = true;
+      this.ngZone.run(() => {
+        this.quoteSent = true;
+        this.quoteLoading = false;
+      });
       this.openConfirmModal('Votre demande de devis a bien été envoyée. Vous recevrez une estimation rapidement.');
     } catch {
+      this.ngZone.run(() => {
+        this.quoteLoading = false;
+      });
       alert('Envoi impossible. Vérifiez votre connexion ou réessayez.');
-    } finally {
-      this.quoteLoading = false;
     }
   }
 
@@ -547,12 +563,16 @@ export class App implements OnInit, OnDestroy {
     this.appointmentLoading = true;
     try {
       await this.apiService.sendAppointment({ ...f, selectedDateLabel: this.selectedDateLabel, selectedSlot: this.selectedSlot });
-      this.goStep(4);
+      this.ngZone.run(() => {
+        this.appointmentLoading = false;
+        this.goStep(4);
+      });
       this.openConfirmModal('Votre demande de rendez-vous a bien été envoyée. Notre chauffeur vous contactera pour confirmer le créneau.');
     } catch {
+      this.ngZone.run(() => {
+        this.appointmentLoading = false;
+      });
       alert('Erreur d\'envoi. Vérifiez votre connexion ou réessayez.');
-    } finally {
-      this.appointmentLoading = false;
     }
   }
 
