@@ -157,7 +157,7 @@ export class App implements OnInit, OnDestroy {
   ];
 
   protected readonly trustCards = [
-    { icon: '🎩', title: 'Entreprises', description: 'Dirigeants, diplomates, voyageurs d\'affaires. Escorte rapprochée possible.' },
+    { icon: '🎩', title: 'Entreprises', description: 'Dirigeants, diplomates, voyageurs d\'affaires. Mise a disposition possible.' },
     { icon: '💍', title: 'Événements', description: 'Séminaires, galas, lancements — une attention portée à chaque détail.' },
     { icon: '✈️', title: 'Transfert aéroport & gares', description: 'CDG, Orly, Beauvais. Suivi des vols et trains en temps réel.' },
   ];
