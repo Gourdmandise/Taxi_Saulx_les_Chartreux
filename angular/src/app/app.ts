@@ -108,13 +108,13 @@ export class App implements OnInit, OnDestroy {
   protected carouselItemWidth = 344; // 320px slide + 24px gap (1.5rem)
   private carouselTimer: any;
   protected readonly carouselImages = [
-    { src: 'https://scrapper.meninbot.com/static/uber/chauffeur-paris-attention.png', label: 'Une attention constante' },
-    { src: 'https://scrapper.meninbot.com/static/uber/chauffeur-prive-instant.png', label: 'Votre chauffeur privé, disponible à chaque instant' },
-    { src: 'https://scrapper.meninbot.com/static/uber/soiree-exception.png', label: 'Une soirée d\'exception' },
-    { src: 'https://scrapper.meninbot.com/static/uber/calme-discretion-bord.png', label: 'Le calme et la discrétion à bord' },
-    { src: 'https://scrapper.meninbot.com/static/uber/trajet-sur-mesure.png', label: 'Un trajet sur-mesure, adapté à vos envies' },
-    { src: 'https://scrapper.meninbot.com/static/uber/confort-famille.png', label: 'Un confort en famille' },
-    { src: 'https://scrapper.meninbot.com/static/uber/service-vip-costume.png', label: 'Service VIP · Accueil soigné' },
+    { src: '/chauffeur-paris-attention.png', label: 'Une attention constante' },
+    { src: '/chauffeur-prive-instant.png', label: 'Votre chauffeur privé, disponible à chaque instant' },
+    { src: '/soiree-exception.png', label: 'Une soirée d\'exception' },
+    { src: '/calme-discretion-bord.png', label: 'Le calme et la discrétion à bord' },
+    { src: '/trajet-sur-mesure.png', label: 'Un trajet sur-mesure, adapté à vos envies' },
+    { src: '/confort-famille.png', label: 'Un confort en famille' },
+    { src: '/service-vip-costume.png', label: 'Service VIP · Accueil soigné' },
   ];
 
   // ── Compteurs animés ──────────────────────────────────────────────────────
@@ -146,9 +146,9 @@ export class App implements OnInit, OnDestroy {
   ];
 
   protected readonly vehicleCards = [
-    { img: 'https://scrapper.meninbot.com/static/uploads/sites/8f980179762b/IMAGE_PAGE_D_ACCEUIL_TP_5808a54e.png', name: 'Berline', description: 'Berline haut de gamme, confort feutré et finitions cuir. Idéale pour vos trajets d\'affaires et transferts aéroport.' },
-    { img: 'https://scrapper.meninbot.com/static/uploads/sites/8f980179762b/Capture_decran_2026-06-23_a_13.02.11_db86926f.png', name: 'Van Mercedes', description: 'Van spacieux jusqu\'à 7 passagers avec leurs bagages. Parfait pour les groupes, familles et transferts aéroport.' },
-    { img: 'https://scrapper.meninbot.com/static/uploads/sites/8f980179762b/Capture_decran_2026-06-23_a_13.22.35_d980e239.png', name: 'Berline haut de gamme', description: 'L\'élégance Mercedes pour vos événements et déplacements VIP. Chauffeur en tenue, prestation haut de gamme.' },
+    { img: '/IMAGE_PAGE_D_ACCEUIL_TP_5808a54e.png', name: 'Berline', description: 'Berline haut de gamme, confort feutré et finitions cuir. Idéale pour vos trajets d\'affaires et transferts aéroport.' },
+    { img: '/Capture_decran_2026-06-23_a_13.02.11_db86926f.png', name: 'Van Mercedes', description: 'Van spacieux jusqu\'à 7 passagers avec leurs bagages. Parfait pour les groupes, familles et transferts aéroport.' },
+    { img: '/Capture_decran_2026-06-23_a_13.22.35_d980e239.png', name: 'Berline haut de gamme', description: 'L\'élégance Mercedes pour vos événements et déplacements VIP. Chauffeur en tenue, prestation haut de gamme.' },
   ];
 
   protected readonly excellenceItems = [
