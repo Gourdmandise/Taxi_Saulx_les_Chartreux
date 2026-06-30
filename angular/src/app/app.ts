@@ -174,11 +174,12 @@ export class App implements OnInit, OnDestroy {
     { title: 'Accueil personnalisé avec pancarte', description: 'Votre chauffeur vous attend au point de rencontre et prend soin de vos bagages.' },
   ];
 
-  protected readonly reviews = [
-    { name: 'Cécile Eriau', date: 'il y a un mois', text: 'Nous recommandons très fortement les services de Nordine ! Ponctuel, serviable, chaleureux, voiture extrêmement propre, petite bouteille d\'eau à disposition.' },
-    { name: 'Valérie Wlodarezack', date: 'il y a 1 mois', text: 'Service au top ! Ponctuel, agréable et serviable, Nordine nous a conduits à l\'aéroport pour notre départ en congés et nous attendait à notre retour deux semaines plus tard.' },
-    { name: 'Eric Deletoille', date: 'il y a 3 semaines', text: 'Taxi sympathique et agréable, véhicule propre et confortable. Ponctuel et conduite souple. Très bon service, je recommande.' },
+   protected readonly reviews = [
+    { name: 'Manuel Bras Gomes', date: 'il y a un mois', text: 'Excellente prestation pour un trajet vers l\'aéroport de Roissy. Julien est très sympathique, ponctuel et sérieux. La prise en charge a été parfaite, avec un véhicule propre et confortable. Conduite souple et rassurante. Arrivé à l\'heure au terminal sans aucun stress. Je referai appel à ses services sans hésiter pour mes prochains déplacements. Merci encore !' },
+    { name: 'Nono Abou', date: 'il y a un mois', text: 'Excellent service. Le taxi est arrivé à l\'heure à l\'aéroport et le trajet s\'est déroulé sans souci. Chauffeur professionnel, véhicule propre et conduite agréable. Je recommande vivement. Merci pour votre service !' },
+    { name: 'Dida Didadida', date: 'il y a un mois', text: 'Chauffeur sérieux et ponctuel, voiture confortable et propre. Service au top, je recommande. Merci à Julien' },
   ];
+
 
   protected readonly guarantees = [
     { icon: '⏰', title: 'Ponctualité garantie', subtitle: '−10 % si retard +10 min' },
