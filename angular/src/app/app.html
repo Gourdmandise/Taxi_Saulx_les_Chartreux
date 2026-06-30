@@ -2,7 +2,7 @@
 <nav class="top-nav" [class.nav-scrolled]="navScrolled">
   <div class="nav-inner">
     <button class="nav-logo" type="button" (click)="goTo('home')">
-      TAXI <span>SAULX-LES-CHARTREUX</span>
+      TAXI <span>PALAISEAU</span>
     </button>
     <div class="nav-links">
       <a [class.active]="currentPage === 'home'" (click)="goTo('home')">Accueil</a>
@@ -38,11 +38,11 @@
   <!-- HERO -->
   <section class="hero" id="top">
     <div class="hero-bg-overlay"></div>
-    <img class="hero-img" src="/IMAGE_PAGE_D_ACCEUIL_TP_5808a54e.png" alt="Taxi Saulx-les-Chartreux" />
+    <img class="hero-img" src="https://scrapper.meninbot.com/static/uploads/sites/8f980179762b/IMAGE_PAGE_D_ACCEUIL_TP_5808a54e.png" alt="Taxi Saulx les Chartreux" />
     <div class="hero-content animate-fade-up">
-      <div class="hero-badge">✦ Chauffeur Taxi certifié · 24/7</div>
-      <h1>L'excellence à chaque trajet<br /><span class="accent">avec Taxi Saulx-les-Chartreux</span></h1>
-      <p class="hero-desc">Optez pour une expérience de taxi haut de gamme, que vous soyez un client particulier ou professionnel.</p>
+      <div class="hero-badge">✦ Chauffeur VTC certifié · 24/7</div>
+      <h1>L'excellence à chaque trajet<br /><span class="accent">avec Taxi Saulx les Chartreux</span></h1>
+      <p class="hero-desc">Optez pour une expérience de taxi haut de gamme, que vous soyez un client particulier ou professionnel. Tarif fixe annoncé à la réservation.</p>
       <div class="hero-btns">
         <button class="btn-primary" type="button" (click)="goTo('devis')">Réserver une course →</button>
         <a href="tel:0650078697" class="btn-secondary link-button">06 50 07 86 97</a>
@@ -103,7 +103,7 @@
   <section class="section dark-section" id="exception">
     <div class="section-inner">
       <div class="section-tag">Notre service d'exception</div>
-      <h2 class="section-title">Un service taillé 24/24<br /><span class="gold-text">pour chaque occasion</span></h2>
+      <h2 class="section-title">Un service taillé<br /><span class="gold-text">pour chaque occasion</span></h2>
       <div class="divider"></div>
     </div>
     <div class="carousel-outer">
@@ -137,31 +137,6 @@
     </div>
   </section>
 
-  <!-- TRANSPORT DE COLIS -->
-  <section class="section reveal" id="colis">
-    <div class="section-inner">
-      <div class="section-tag">Service spécialisé</div>
-      <h2 class="section-title">Transport de colis<br /><span class="gold-text">de valeur</span></h2>
-      <div class="divider"></div>
-      <div class="excellence-grid">
-        <div>
-          <p class="section-copy">Confiez vos envois sensibles à un chauffeur professionnel. Documents confidentiels, bijoux, pièces de luxe — chaque colis est transporté avec la même rigueur que nos passagers.</p>
-          <ul class="excellence-list">
-            <li class="excellence-li"><span class="check-ico">✓</span> Prise en charge et livraison en mains propres</li>
-            <li class="excellence-li"><span class="check-ico">✓</span> Suivi en temps réel de votre envoi</li>
-            <li class="excellence-li"><span class="check-ico">✓</span> Discrétion et confidentialité garanties</li>
-            <li class="excellence-li"><span class="check-ico">✓</span> Véhicule sécurisé, conduite souple</li>
-            <li class="excellence-li"><span class="check-ico">✓</span> Disponible 24/7 · Île-de-France & province</li>
-          </ul>
-          <div class="hero-btns">
-            <button class="btn-primary" type="button" (click)="goTo('devis')">Demander un devis colis →</button>
-            <a href="tel:0650078697" class="btn-secondary link-button">📞 06 50 07 86 97</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- L'EXCELLENCE -->
   <section class="section dark-section reveal" id="services">
     <div class="section-inner excellence-grid">
@@ -169,7 +144,7 @@
         <div class="section-tag">L'Excellence</div>
         <h2 class="section-title">Chauffeur professionnel.<br />Service haut de gamme.</h2>
         <div class="divider"></div>
-        <p class="section-copy">Taxi Saulx-les-Chartreux c'est le service de chauffeur qui change votre rapport au déplacement. Véhicule impeccable, chauffeur en tenue, ponctualité absolue.</p>
+        <p class="section-copy">Taxi Saulx les Chartreux c'est le service VTC qui change votre rapport au déplacement. Véhicule impeccable, chauffeur en tenue, ponctualité absolue.</p>
         <ul class="excellence-list">
           @for (item of excellenceItems; track item) {
             <li class="excellence-li">
@@ -207,9 +182,9 @@
       <p class="section-subtitle">Glissez le curseur pour révéler l'intérieur. Berlines d'exception, finitions cuir nappa.</p>
       <div class="divider"></div>
       <div class="reveal-slider" (mousedown)="sliderStart($event)" (touchstart)="sliderTouchStart($event)">
-        <img class="slider-img back" src="/Capture_decran_2026-06-23_a_13.22.35_d980e239.png" alt="Intérieur" />
+        <img class="slider-img back" src="https://scrapper.meninbot.com/static/uploads/sites/8f980179762b/Capture_decran_2026-06-23_a_13.22.35_d980e239.png" alt="Intérieur" />
         <div class="slider-front" [style.width]="sliderPct + '%'">
-          <img class="slider-img" src="/IMAGE_PAGE_D_ACCEUIL_TP_5808a54e.png" alt="Extérieur" />
+          <img class="slider-img" src="https://scrapper.meninbot.com/static/uploads/sites/8f980179762b/IMAGE_PAGE_D_ACCEUIL_TP_5808a54e.png" alt="Extérieur" />
         </div>
         <div class="slider-handle" [style.left]="sliderPct + '%'">
           <div class="slider-handle-circle">⟷</div>
@@ -218,9 +193,9 @@
         <div class="slider-label right-lbl">Intérieur</div>
       </div>
       <div class="slider-specs">
-        <span>🚘 Berline premium</span>
+        <span>🚘 Mercedes-Maybach · Berline premium</span>
         <span>🛋️ Cuir nappa, atmosphère feutrée</span>
-        <span>📶 Wifi, eau, chargeurs</span>
+        <span>📶 Wifi, eau, chargeurs, presse du jour</span>
       </div>
     </div>
   </section>
@@ -250,7 +225,7 @@
         <div class="section-tag">Service signature · Aéroports & gares</div>
         <h2 class="section-title">Accueil avec<br /><span class="gold-text">pancarte personnalisée</span></h2>
         <div class="divider"></div>
-        <p class="section-copy">À votre arrivée à l'aéroport ou en gare, votre chauffeur Taxi Saulx-les-Chartreux vous attend en personne, pancarte à votre nom.</p>
+        <p class="section-copy">À votre arrivée à l'aéroport ou en gare, votre chauffeur Taxi Saulx les Chartreux vous attend en personne, pancarte à votre nom.</p>
         <div class="airport-features">
           @for (f of airportFeatures; track f.title) {
             <div class="airport-feature">
@@ -325,9 +300,9 @@
   <section class="section dark-section">
     <div class="section-inner cta-mid">
       <h2>Votre déplacement mérite<br /><span class="gold-text">un chauffeur d'exception</span></h2>
-      <p>Réservation 2 min · Disponible 24/7 · Île-de-France & national</p>
+      <p>Tarif fixe · Réservation 30 sec · Disponible 24/7 · Île-de-France & national</p>
       <button class="btn-primary" type="button" (click)="goTo('devis')">Réserver une course →</button>
-      <p class="cta-sub">+12 000 courses · 5/5 · Ponctualité garantie</p>
+      <p class="cta-sub">+12 000 courses · 4,9/5 · Ponctualité garantie</p>
     </div>
   </section>
 
@@ -344,7 +319,7 @@
       </div>
       <div class="payment-banner">
         <div>
-          <b>💳 CB · Apple Pay · Espèces</b>
+          <b>💳 CB · Apple Pay · Espèces · Virement</b>
           <p>Paiement sécurisé — facture électronique professionnelle sur demande. Conforme réforme 2026.</p>
         </div>
         <div class="payment-badge">Facture électronique · Conforme 2026</div>
@@ -356,9 +331,9 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <div>
-        <button class="nav-logo footer-logo" type="button" (click)="goTo('home')">TAXI <span>SAULX-LES-CHARTREUX</span></button>
-        <p class="footer-desc">Chauffeur Taxi certifié · Assurance professionnelle · Disponible 24/7</p>
-        <p class="footer-desc">© 2026 Taxi Saulx-les-Chartreux · Tous droits réservés</p>
+        <button class="nav-logo footer-logo" type="button" (click)="goTo('home')">TAXI <span>PALAISEAU</span></button>
+        <p class="footer-desc">Chauffeur VTC certifié · Assurance professionnelle · Disponible 24/7</p>
+        <p class="footer-desc">© 2026 Taxi Saulx les Chartreux · Tous droits réservés</p>
       </div>
       <div class="footer-col">
         <h4>Navigation</h4>
@@ -381,16 +356,16 @@
         <h4>Contact</h4>
         <ul>
           <li><a href="tel:0650078697">📞 06 50 07 86 97</a></li>
-          <li>📍 Saulx-les-Chartreux · Essonne 91</li>
+          <li>📍 Palaiseau · Essonne 91</li>
           <li>🕐 24h/24 · 7j/7</li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 Taxi Saulx-les-Chartreux — Tous droits réservés.</p>
+      <p>© 2026 Taxi Saulx les Chartreux — Tous droits réservés.</p>
       <div class="footer-legal">
-        <a href="#">Mentions légales</a>
-        <a href="#">Politique de confidentialité</a>
+        <a (click)="goTo('mentions-legales')">Mentions légales</a>
+        <a (click)="goTo('mentions-legales')">Politique de confidentialité</a>
       </div>
     </div>
   </footer>
@@ -457,7 +432,7 @@
           </select>
         </div>
         <div class="form-group"><label>Message *</label><textarea rows="5" placeholder="Votre message…" [(ngModel)]="contactForm.message"></textarea></div>
-        <button class="submit-btn" type="button" (click)="submitContact()" [disabled]="contactLoading">{{ contactLoading ? 'Envoi en cours… (max 10s)' : '✉️ ENVOYER LE MESSAGE' }}</button>
+        <button class="submit-btn" type="button" (click)="submitContact()" [disabled]="contactLoading">{{ contactLoading ? 'Envoi en cours…' : '✉️ ENVOYER LE MESSAGE' }}</button>
         <p class="form-note">🔒 Vos données sont confidentielles.</p>
       } @else {
         <div class="success-box">
@@ -515,7 +490,7 @@
             pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s'\-]{1,60}" maxlength="60" title="Lettres uniquement (pas de chiffres)"
             (input)="onNameInput($event, quoteForm, 'lastName')" /></div>
         </div>
-        <div class="form-group"><label>Point de départ *</label><input type="text" placeholder="Ex : Saulx-les-Chartreux…" [(ngModel)]="quoteForm.departure" /></div>
+        <div class="form-group"><label>Point de départ *</label><input type="text" placeholder="Ex : Palaiseau…" [(ngModel)]="quoteForm.departure" /></div>
         <div class="form-group"><label>Point d'arrivée *</label><input type="text" placeholder="Ex : Aéroport d'Orly…" [(ngModel)]="quoteForm.arrival" /></div>
         <div class="two-col">
           <div class="form-group">
@@ -529,7 +504,7 @@
             <label>Type de trajet</label>
             <select [(ngModel)]="quoteForm.tripType">
               <option>Standard</option><option>Aéroport / Gare</option><option>Longue distance</option>
-              <option>Business</option><option>Événement (séminaire, gala)</option>
+              <option>Business</option><option>Mariage & événement VIP</option>
             </select>
           </div>
         </div>
@@ -540,7 +515,7 @@
         <div class="form-group"><label>E-mail</label><input type="email" placeholder="jean@exemple.fr" [(ngModel)]="quoteForm.email"
           maxlength="100" inputmode="email" /></div>
         <div class="form-group"><label>Informations complémentaires</label><textarea rows="3" placeholder="Date, heure, bagages…" [(ngModel)]="quoteForm.note"></textarea></div>
-        <button class="submit-btn" type="button" (click)="submitQuote()" [disabled]="quoteLoading">{{ quoteLoading ? 'Envoi en cours… (max 10s)' : '💰 OBTENIR MON ESTIMATION GRATUITE' }}</button>
+        <button class="submit-btn" type="button" (click)="submitQuote()" [disabled]="quoteLoading">{{ quoteLoading ? 'Envoi en cours…' : '💰 OBTENIR MON ESTIMATION GRATUITE' }}</button>
         <p class="form-note">🔒 Devis gratuit · Sans engagement</p>
       } @else {
         <div class="success-box">
@@ -631,12 +606,12 @@
             <label>Objet du rendez-vous</label>
             <select [(ngModel)]="appointmentForm.subject">
               <option>Réservation d'un trajet</option><option>Transfert aéroport / gare</option>
-              <option>Demande de devis détaillée</option><option>Événement (séminaire, gala)</option>
+              <option>Demande de devis détaillée</option><option>Mariage & événement VIP</option>
               <option>Information sur les services</option><option>Autre</option>
             </select>
           </div>
           <div class="form-group"><label>Notes (optionnel)</label><textarea rows="3" placeholder="Informations utiles…" [(ngModel)]="appointmentForm.notes"></textarea></div>
-          <button class="submit-btn" type="button" (click)="confirmAppointment()" [disabled]="appointmentLoading">{{ appointmentLoading ? 'Confirmation en cours… (max 10s)' : '📅 CONFIRMER LE RENDEZ-VOUS' }}</button>
+          <button class="submit-btn" type="button" (click)="confirmAppointment()" [disabled]="appointmentLoading">{{ appointmentLoading ? 'Confirmation en cours…' : '📅 CONFIRMER LE RENDEZ-VOUS' }}</button>
         </div>
       }
       @if (appointmentStep === 4) {
@@ -655,6 +630,68 @@
           </div>
         </div>
       }
+    </div>
+  </div>
+</main>
+}
+
+<!-- ===== PAGE MENTIONS LÉGALES ===== -->
+@if (currentPage === 'mentions-legales') {
+<main class="page-shell sub-page">
+  <header class="sub-header">
+    <div class="section-inner sub-header-inner">
+      <div class="sub-header-icon">⚖️</div>
+      <div>
+        <div class="sub-breadcrumb">Accueil → <span>Mentions légales</span></div>
+        <h1>Mentions légales</h1>
+        <p>Informations légales et politique de confidentialité du site Taxi Saulx-les-Chartreux.</p>
+      </div>
+    </div>
+  </header>
+  <div class="section-inner sub-body">
+    <div class="legal-grid">
+      <div class="legal-content">
+        @for (section of legalSections; track section.title) {
+          <div class="legal-section">
+            <h2>{{ section.title }}</h2>
+            @for (line of section.content; track line) {
+              <p>{{ line }}</p>
+            }
+          </div>
+        }
+        <div class="legal-section">
+          <h2>8. Contact</h2>
+          <p>Pour toute question relative à ces mentions légales ou à vos données personnelles :</p>
+          <div class="legal-contact">
+            <a href="tel:0650078697" class="btn-primary">📞 06 50 07 86 97</a>
+            <button class="outline-btn" type="button" (click)="goTo('contact')">✉️ Formulaire de contact</button>
+          </div>
+        </div>
+        <p class="legal-update">Dernière mise à jour : juin 2026</p>
+      </div>
+      <aside class="legal-aside">
+        <div class="legal-aside-card">
+          <div class="section-tag">Navigation rapide</div>
+          <nav class="legal-nav">
+            <a>1. Éditeur du site</a>
+            <a>2. Hébergement</a>
+            <a>3. Propriété intellectuelle</a>
+            <a>4. Données personnelles</a>
+            <a>5. Cookies</a>
+            <a>6. Responsabilité</a>
+            <a>7. Droit applicable</a>
+            <a>8. Contact</a>
+          </nav>
+        </div>
+        <div class="legal-aside-card mt">
+          <div class="section-tag">Nous contacter</div>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin:0.75rem 0 1.25rem">Une question ? Notre équipe est disponible 24h/24.</p>
+          <a href="tel:0650078697" class="btn-primary" style="display:block;text-align:center">📞 06 50 07 86 97</a>
+        </div>
+      </aside>
+    </div>
+    <div class="legal-back">
+      <button class="outline-btn" type="button" (click)="goTo('home')">← Retour à l'accueil</button>
     </div>
   </div>
 </main>

@@ -3,7 +3,7 @@ import { Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChi
 import { FormsModule } from '@angular/forms';
 import { ApiService } from './api.service';
 
-type Page = 'home' | 'contact' | 'devis' | 'rdv';
+type Page = 'home' | 'contact' | 'devis' | 'rdv' | 'mentions-legales';
 type AppointmentStep = 1 | 2 | 3 | 4;
 
 interface CalendarCell { label: string; dateKey?: string; disabled: boolean; isToday: boolean; isSelected: boolean; isBlank: boolean; }
@@ -39,52 +39,29 @@ export class App implements OnInit, OnDestroy {
   protected appointmentForm = { firstName: '', lastName: '', phone: '', email: '', subject: "Réservation d'un trajet", notes: '' };
 
   // ── Validation ───────────────────────────────────────────────────────────
-  /** Numéro français 10 chiffres : 0X XX XX XX XX ou +33X XX XX XX XX */
   private readonly PHONE_REGEX = /^(?:\+33\s?|0)[1-9](?:[\s.\-]?\d{2}){4}$/;
-  /** Nom/prénom : lettres uniquement (accents inclus), espaces, tirets, apostrophes — AUCUN chiffre */
   private readonly NAME_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'\-]{1,60}$/;
-  /** Email basique */
   private readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-  protected isValidPhone(value: string): boolean {
-    return this.PHONE_REGEX.test(value.trim());
-  }
-  protected isValidName(value: string): boolean {
-    return this.NAME_REGEX.test(value.trim());
-  }
-  protected isValidEmail(value: string): boolean {
-    return value.trim() === '' || this.EMAIL_REGEX.test(value.trim());
-  }
+  protected isValidPhone(value: string): boolean { return this.PHONE_REGEX.test(value.trim()); }
+  protected isValidName(value: string): boolean { return this.NAME_REGEX.test(value.trim()); }
+  protected isValidEmail(value: string): boolean { return value.trim() === '' || this.EMAIL_REGEX.test(value.trim()); }
 
-  /**
-   * Filtre à la frappe : autorise uniquement chiffres, +, espaces, tirets, points.
-   * Limite à 14 caractères (ex : "+33 7 65 19 18 62" = 17 max avec espaces, 0X XX XX XX XX = 14)
-   */
   protected onPhoneInput(event: Event, form: Record<string, string>, field: string): void {
     const input = event.target as HTMLInputElement;
-    // Supprime tout sauf chiffres, +, espaces, tirets, points
     let val = input.value.replace(/[^\d+\s.\-]/g, '');
-    // Compte les chiffres seuls — max 10 chiffres (numéro FR sans indicatif) ou 11 avec +33
     const digits = val.replace(/\D/g, '');
     const maxDigits = val.startsWith('+33') ? 11 : 10;
     if (digits.length > maxDigits) {
-      // Tronque en retirant les derniers chiffres en trop
       let count = 0;
-      val = val.split('').filter(c => {
-        if (/\d/.test(c)) { count++; return count <= maxDigits; }
-        return true;
-      }).join('');
+      val = val.split('').filter(c => { if (/\d/.test(c)) { count++; return count <= maxDigits; } return true; }).join('');
     }
     input.value = val;
     form[field] = val;
   }
 
-  /**
-   * Filtre à la frappe pour les champs nom/prénom : bloque les chiffres et caractères spéciaux
-   */
   protected onNameInput(event: Event, form: Record<string, string>, field: string): void {
     const input = event.target as HTMLInputElement;
-    // Supprime chiffres et tout ce qui n'est pas lettre/espace/tiret/apostrophe
     input.value = input.value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s'\-]/g, '');
     form[field] = input.value;
   }
@@ -105,7 +82,7 @@ export class App implements OnInit, OnDestroy {
 
   // ── Carrousel ────────────────────────────────────────────────────────────
   protected carouselIndex = 0;
-  protected carouselItemWidth = 344; // 320px slide + 24px gap (1.5rem)
+  protected carouselItemWidth = 344;
   private carouselTimer: any;
   protected readonly carouselImages = [
     { src: '/chauffeur-paris-attention.png', label: 'Une attention constante' },
@@ -174,12 +151,11 @@ export class App implements OnInit, OnDestroy {
     { title: 'Accueil personnalisé avec pancarte', description: 'Votre chauffeur vous attend au point de rencontre et prend soin de vos bagages.' },
   ];
 
-   protected readonly reviews = [
+  protected readonly reviews = [
     { name: 'Manuel Bras Gomes', date: 'il y a un mois', text: 'Excellente prestation pour un trajet vers l\'aéroport de Roissy. Julien est très sympathique, ponctuel et sérieux. La prise en charge a été parfaite, avec un véhicule propre et confortable. Conduite souple et rassurante. Arrivé à l\'heure au terminal sans aucun stress. Je referai appel à ses services sans hésiter pour mes prochains déplacements. Merci encore !' },
     { name: 'Nono Abou', date: 'il y a un mois', text: 'Excellent service. Le taxi est arrivé à l\'heure à l\'aéroport et le trajet s\'est déroulé sans souci. Chauffeur professionnel, véhicule propre et conduite agréable. Je recommande vivement. Merci pour votre service !' },
     { name: 'Dida Didadida', date: 'il y a un mois', text: 'Chauffeur sérieux et ponctuel, voiture confortable et propre. Service au top, je recommande. Merci à Julien' },
   ];
-
 
   protected readonly guarantees = [
     { icon: '⏰', title: 'Ponctualité garantie', subtitle: '−10 % si retard +10 min' },
@@ -211,6 +187,60 @@ export class App implements OnInit, OnDestroy {
     { icon: '🛣️', title: 'Toutes distances', description: 'Déplacement local, aéroport, longue distance ou mise à disposition.' },
   ];
 
+  // ── Mentions légales ──────────────────────────────────────────────────────
+  protected readonly legalSections = [
+    {
+      title: '1. Éditeur du site',
+      content: [
+        'Nom commercial : Taxi Saulx-les-Chartreux',
+        'Exploitant : Julien (chauffeur taxi indépendant)',
+        'Adresse : Saulx-les-Chartreux, Essonne (91)',
+        'Téléphone : 06 50 07 86 97',
+        'Statut : Auto-entrepreneur / Taxi indépendant',
+        'Carte professionnelle : délivrée par la Préfecture de l\'Essonne',
+      ]
+    },
+    {
+      title: '2. Hébergement',
+      content: [
+        'Frontend : Vercel Inc., 340 Pine Street, Suite 701, San Francisco, CA 94104, USA — vercel.com',
+        'Backend : Render Services Inc., 525 Brannan Street, Suite 300, San Francisco, CA 94107, USA — render.com',
+      ]
+    },
+    {
+      title: '3. Propriété intellectuelle',
+      content: [
+        'L\'ensemble du contenu de ce site (textes, images, graphismes, logo) est la propriété exclusive de Taxi Saulx-les-Chartreux ou de ses partenaires. Toute reproduction, même partielle, est interdite sans autorisation préalable.',
+      ]
+    },
+    {
+      title: '4. Données personnelles',
+      content: [
+        'Les données collectées via les formulaires (nom, téléphone, e-mail) sont utilisées exclusivement pour répondre à vos demandes de réservation ou de devis. Elles ne sont ni vendues, ni transmises à des tiers.',
+        'Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d\'un droit d\'accès, de rectification et de suppression de vos données. Pour exercer ce droit : 06 50 07 86 97.',
+        'Durée de conservation : vos données sont conservées 12 mois maximum à compter de votre dernière demande.',
+      ]
+    },
+    {
+      title: '5. Cookies',
+      content: [
+        'Ce site n\'utilise pas de cookies publicitaires ni de traceurs tiers. Aucune donnée de navigation n\'est collectée à des fins commerciales.',
+      ]
+    },
+    {
+      title: '6. Responsabilité',
+      content: [
+        'Taxi Saulx-les-Chartreux s\'efforce de maintenir les informations de ce site à jour mais ne peut garantir leur exactitude absolue. L\'utilisation des informations du site se fait sous la seule responsabilité de l\'utilisateur.',
+      ]
+    },
+    {
+      title: '7. Droit applicable',
+      content: [
+        'Le présent site est soumis au droit français. Tout litige relatif à son utilisation sera soumis à la juridiction compétente du ressort de l\'Essonne.',
+      ]
+    },
+  ];
+
   constructor(
     private readonly apiService: ApiService,
     private readonly ngZone: NgZone,
@@ -233,16 +263,11 @@ export class App implements OnInit, OnDestroy {
     document.removeEventListener('touchend', this.onMouseUp);
   }
 
-  // ── Scroll nav ────────────────────────────────────────────────────────────
   @HostListener('window:scroll')
-  onScroll(): void {
-    this.navScrolled = window.scrollY > 60;
-  }
+  onScroll(): void { this.navScrolled = window.scrollY > 60; }
 
   @HostListener('window:resize')
-  onResize(): void {
-    this.updateCarouselItemWidth();
-  }
+  onResize(): void { this.updateCarouselItemWidth(); }
 
   private updateCarouselItemWidth(): void {
     const slide = document.querySelector('.carousel-slide') as HTMLElement | null;
@@ -253,23 +278,16 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  // ── Reveal on scroll ─────────────────────────────────────────────────────
   private setupScrollObserver(): void {
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('revealed'); });
     }, { threshold: 0.12 });
-    setTimeout(() => {
-      document.querySelectorAll('.reveal, .reveal-item').forEach(el => obs.observe(el));
-    }, 100);
+    setTimeout(() => { document.querySelectorAll('.reveal, .reveal-item').forEach(el => obs.observe(el)); }, 100);
   }
 
-  // ── Compteurs animés ──────────────────────────────────────────────────────
   private setupStatsObserver(): void {
     this.statsObserver = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !this.statsAnimated) {
-        this.statsAnimated = true;
-        this.animateCounters();
-      }
+      if (entries[0].isIntersecting && !this.statsAnimated) { this.statsAnimated = true; this.animateCounters(); }
     }, { threshold: 0.5 });
     setTimeout(() => {
       const el = document.querySelector('.stats-section');
@@ -278,25 +296,15 @@ export class App implements OnInit, OnDestroy {
   }
 
   private animateCounters(): void {
-    const duration = 1800;
-    const fps = 60;
-    const steps = duration / (1000 / fps);
-    let step = 0;
+    const duration = 1800; const fps = 60; const steps = duration / (1000 / fps); let step = 0;
     const interval = setInterval(() => {
       step++;
       const progress = this.easeOut(step / steps);
       this.displayStats = this.displayStats.map((s, i) => {
-        if (i === 0) {
-          const val = Math.round(progress * 12000);
-          return { ...s, display: '+' + val.toLocaleString('fr-FR') };
-        } else if (i === 1) {
-          const val = (progress * 5).toFixed(1);
-          return { ...s, display: val.replace('.', ',') };
-        } else if (i === 2) {
-          return { ...s, display: '0 €' };
-        } else {
-          return { ...s, display: String(Math.round(progress * 24)) };
-        }
+        if (i === 0) { const val = Math.round(progress * 12000); return { ...s, display: '+' + val.toLocaleString('fr-FR') }; }
+        else if (i === 1) { const val = (progress * 5).toFixed(1); return { ...s, display: val.replace('.', ',') }; }
+        else if (i === 2) { return { ...s, display: '0 €' }; }
+        else { return { ...s, display: String(Math.round(progress * 24)) }; }
       });
       if (step >= steps) {
         clearInterval(interval);
@@ -307,39 +315,21 @@ export class App implements OnInit, OnDestroy {
     }, 1000 / fps);
   }
 
-  private easeOut(t: number): number {
-    return 1 - Math.pow(1 - t, 3);
-  }
+  private easeOut(t: number): number { return 1 - Math.pow(1 - t, 3); }
 
-  // ── Carrousel ─────────────────────────────────────────────────────────────
-  private readonly carouselMaxIndex = this.carouselImages.length - 3; // 4
+  private readonly carouselMaxIndex = this.carouselImages.length - 3;
 
-  protected carouselPrev(): void {
-    this.carouselIndex = this.carouselIndex === 0 ? 0 : this.carouselIndex - 1;
-    this.restartCarouselAuto();
-  }
-
-  protected carouselNext(): void {
-    this.carouselIndex = this.carouselIndex >= this.carouselMaxIndex ? this.carouselMaxIndex : this.carouselIndex + 1;
-    this.restartCarouselAuto();
-  }
+  protected carouselPrev(): void { this.carouselIndex = this.carouselIndex === 0 ? 0 : this.carouselIndex - 1; this.restartCarouselAuto(); }
+  protected carouselNext(): void { this.carouselIndex = this.carouselIndex >= this.carouselMaxIndex ? this.carouselMaxIndex : this.carouselIndex + 1; this.restartCarouselAuto(); }
 
   private startCarouselAuto(): void {
     this.carouselTimer = setInterval(() => {
-      if (this.carouselIndex >= this.carouselMaxIndex) {
-        this.carouselIndex = 0;
-      } else {
-        this.carouselIndex++;
-      }
+      if (this.carouselIndex >= this.carouselMaxIndex) { this.carouselIndex = 0; } else { this.carouselIndex++; }
     }, 3500);
   }
 
-  private restartCarouselAuto(): void {
-    clearInterval(this.carouselTimer);
-    this.startCarouselAuto();
-  }
+  private restartCarouselAuto(): void { clearInterval(this.carouselTimer); this.startCarouselAuto(); }
 
-  // ── Slider révél ──────────────────────────────────────────────────────────
   protected sliderStart(e: MouseEvent): void {
     this.isDragging = true;
     this.updateSlider(e.clientX, (e.currentTarget as HTMLElement));
@@ -353,26 +343,9 @@ export class App implements OnInit, OnDestroy {
     document.addEventListener('touchend', this.onMouseUp);
   }
 
-  private onMouseMove = (e: MouseEvent) => {
-    if (!this.isDragging) return;
-    const el = document.querySelector('.reveal-slider') as HTMLElement;
-    if (el) this.updateSlider(e.clientX, el);
-  };
-
-  private onTouchMove = (e: TouchEvent) => {
-    if (!this.isDragging) return;
-    e.preventDefault();
-    const el = document.querySelector('.reveal-slider') as HTMLElement;
-    if (el) this.updateSlider(e.touches[0].clientX, el);
-  };
-
-  private onMouseUp = () => {
-    this.isDragging = false;
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
-    document.removeEventListener('touchmove', this.onTouchMove);
-    document.removeEventListener('touchend', this.onMouseUp);
-  };
+  private onMouseMove = (e: MouseEvent) => { if (!this.isDragging) return; const el = document.querySelector('.reveal-slider') as HTMLElement; if (el) this.updateSlider(e.clientX, el); };
+  private onTouchMove = (e: TouchEvent) => { if (!this.isDragging) return; e.preventDefault(); const el = document.querySelector('.reveal-slider') as HTMLElement; if (el) this.updateSlider(e.touches[0].clientX, el); };
+  private onMouseUp = () => { this.isDragging = false; document.removeEventListener('mousemove', this.onMouseMove); document.removeEventListener('mouseup', this.onMouseUp); document.removeEventListener('touchmove', this.onTouchMove); document.removeEventListener('touchend', this.onMouseUp); };
 
   private updateSlider(clientX: number, el: HTMLElement): void {
     const rect = el.getBoundingClientRect();
@@ -380,7 +353,6 @@ export class App implements OnInit, OnDestroy {
     this.sliderPct = pct;
   }
 
-  // ── Navigation ────────────────────────────────────────────────────────────
   protected toggleFaq(i: number): void { this.openFaq = this.openFaq === i ? null : i; }
 
   protected goTo(page: Page): void {
@@ -390,20 +362,16 @@ export class App implements OnInit, OnDestroy {
     if (page === 'rdv') this.initCalendar();
     if (page === 'home') {
       setTimeout(() => {
-        this.setupScrollObserver();
-        this.setupStatsObserver();
+        this.setupScrollObserver(); this.setupStatsObserver();
         this.statsAnimated = false;
-        this.displayStats[0].display = '0+';
-        this.displayStats[1].display = '0,0';
-        this.displayStats[3].display = '24/7';
+        this.displayStats[0].display = '0+'; this.displayStats[1].display = '0,0'; this.displayStats[3].display = '24/7';
       }, 100);
     }
   }
 
   protected scrollSection(id: string): void {
     if (this.currentPage !== 'home') {
-      this.currentPage = 'home';
-      this.mobileMenuOpen = false;
+      this.currentPage = 'home'; this.mobileMenuOpen = false;
       setTimeout(() => { this.setupScrollObserver(); this.setupStatsObserver(); this.statsAnimated = false; }, 100);
       setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
     } else {
@@ -416,115 +384,56 @@ export class App implements OnInit, OnDestroy {
 
   // ── Formulaires ───────────────────────────────────────────────────────────
 
-  /** Affiche la pop-up de confirmation d'envoi (remplace la confirmation par e-mail) */
   protected openConfirmModal(message: string): void {
-    // ngZone.run garantit que le changement d'état déclenche bien un cycle
-    // de détection de changement Angular immédiatement, même si la promesse
-    // HTTP (timeout RxJS) s'est résolue en dehors de la zone Angular.
-    this.ngZone.run(() => {
-      this.confirmModalText = message;
-      this.showConfirmModal = true;
-    });
+    this.ngZone.run(() => { this.confirmModalText = message; this.showConfirmModal = true; });
   }
 
-  protected closeConfirmModal(): void {
-    this.showConfirmModal = false;
-  }
+  protected closeConfirmModal(): void { this.showConfirmModal = false; }
 
-  // Formulaire page Contact
   protected async submitContact(): Promise<void> {
     if (this.contactLoading) return;
     const f = this.contactForm;
-    if (!f.firstName.trim() || !f.phone.trim() || !f.subject || !f.message.trim()) {
-      alert('Veuillez remplir les champs obligatoires (*).');
-      return;
-    }
-    if (!this.isValidName(f.firstName)) {
-      alert('Le prénom ne doit contenir que des lettres.');
-      return;
-    }
-    if (f.lastName.trim() && !this.isValidName(f.lastName)) {
-      alert('Le nom ne doit contenir que des lettres.');
-      return;
-    }
-    if (!this.isValidPhone(f.phone)) {
-      alert('Numéro de téléphone invalide. Format attendu : 06 50 07 86 97');
-      return;
-    }
-    if (!this.isValidEmail(f.email)) {
-      alert('Adresse e-mail invalide.');
-      return;
-    }
+    if (!f.firstName.trim() || !f.phone.trim() || !f.subject || !f.message.trim()) { alert('Veuillez remplir les champs obligatoires (*).'); return; }
+    if (!this.isValidName(f.firstName)) { alert('Le prénom ne doit contenir que des lettres.'); return; }
+    if (f.lastName.trim() && !this.isValidName(f.lastName)) { alert('Le nom ne doit contenir que des lettres.'); return; }
+    if (!this.isValidPhone(f.phone)) { alert('Numéro de téléphone invalide. Format attendu : 06 50 07 86 97'); return; }
+    if (!this.isValidEmail(f.email)) { alert('Adresse e-mail invalide.'); return; }
     this.contactLoading = true;
     try {
       await this.apiService.sendContact(f);
-      this.ngZone.run(() => {
-        this.contactSent = true;
-        this.contactLoading = false;
-      });
+      this.ngZone.run(() => { this.contactSent = true; this.contactLoading = false; });
       this.openConfirmModal('Votre message a bien été envoyé. Notre équipe vous répondra dans les meilleurs délais.');
     } catch (err) {
       console.error('submitContact error (affiché en succès quand même) :', err);
-      this.ngZone.run(() => {
-        this.contactSent = true;
-        this.contactLoading = false;
-      });
+      this.ngZone.run(() => { this.contactSent = true; this.contactLoading = false; });
       this.openConfirmModal('Votre message a bien été envoyé. Notre équipe vous répondra dans les meilleurs délais.');
     }
   }
 
-  protected resetContact(): void {
-    this.contactForm = { firstName: '', lastName: '', email: '', phone: '', subject: '', message: '' };
-    this.contactSent = false;
-  }
+  protected resetContact(): void { this.contactForm = { firstName: '', lastName: '', email: '', phone: '', subject: '', message: '' }; this.contactSent = false; }
 
   protected async submitQuote(): Promise<void> {
     if (this.quoteLoading) return;
     const f = this.quoteForm;
-    if (!f.firstName.trim() || !f.lastName.trim() || !f.departure.trim() || !f.arrival.trim() || !f.phone.trim()) {
-      alert('Veuillez remplir les champs obligatoires (*).');
-      return;
-    }
-    if (!this.isValidName(f.firstName)) {
-      alert('Le prénom ne doit contenir que des lettres.');
-      return;
-    }
-    if (!this.isValidName(f.lastName)) {
-      alert('Le nom ne doit contenir que des lettres.');
-      return;
-    }
-    if (!this.isValidPhone(f.phone)) {
-      alert('Numéro de téléphone invalide. Format attendu : 06 50 07 86 97');
-      return;
-    }
-    if (!this.isValidEmail(f.email)) {
-      alert('Adresse e-mail invalide.');
-      return;
-    }
+    if (!f.firstName.trim() || !f.lastName.trim() || !f.departure.trim() || !f.arrival.trim() || !f.phone.trim()) { alert('Veuillez remplir les champs obligatoires (*).'); return; }
+    if (!this.isValidName(f.firstName)) { alert('Le prénom ne doit contenir que des lettres.'); return; }
+    if (!this.isValidName(f.lastName)) { alert('Le nom ne doit contenir que des lettres.'); return; }
+    if (!this.isValidPhone(f.phone)) { alert('Numéro de téléphone invalide. Format attendu : 06 50 07 86 97'); return; }
+    if (!this.isValidEmail(f.email)) { alert('Adresse e-mail invalide.'); return; }
     this.quoteLoading = true;
     try {
       await this.apiService.sendQuote(f);
-      this.ngZone.run(() => {
-        this.quoteSent = true;
-        this.quoteLoading = false;
-      });
+      this.ngZone.run(() => { this.quoteSent = true; this.quoteLoading = false; });
       this.openConfirmModal('Votre demande de devis a bien été envoyée. Vous recevrez une estimation rapidement.');
     } catch (err) {
       console.error('submitQuote error (affiché en succès quand même) :', err);
-      this.ngZone.run(() => {
-        this.quoteSent = true;
-        this.quoteLoading = false;
-      });
+      this.ngZone.run(() => { this.quoteSent = true; this.quoteLoading = false; });
       this.openConfirmModal('Votre demande de devis a bien été envoyée. Vous recevrez une estimation rapidement.');
     }
   }
 
-  protected resetQuote(): void {
-    this.quoteForm = { firstName: '', lastName: '', departure: '', arrival: '', passengers: '1 passager', tripType: 'Standard', phone: '', email: '', note: '' };
-    this.quoteSent = false;
-  }
+  protected resetQuote(): void { this.quoteForm = { firstName: '', lastName: '', departure: '', arrival: '', passengers: '1 passager', tripType: 'Standard', phone: '', email: '', note: '' }; this.quoteSent = false; }
 
-  // ── Calendrier RDV ────────────────────────────────────────────────────────
   protected previousMonth(): void { this.currentMonth--; if (this.currentMonth < 0) { this.currentMonth = 11; this.currentYear--; } this.renderCalendar(); }
   protected nextMonth(): void { this.currentMonth++; if (this.currentMonth > 11) { this.currentMonth = 0; this.currentYear++; } this.renderCalendar(); }
 
@@ -542,40 +451,19 @@ export class App implements OnInit, OnDestroy {
   protected async confirmAppointment(): Promise<void> {
     if (this.appointmentLoading) return;
     const f = this.appointmentForm;
-    if (!f.firstName.trim() || !f.lastName.trim() || !f.phone.trim()) {
-      alert('Veuillez remplir prénom, nom et téléphone.');
-      return;
-    }
-    if (!this.isValidName(f.firstName)) {
-      alert('Le prénom ne doit contenir que des lettres.');
-      return;
-    }
-    if (!this.isValidName(f.lastName)) {
-      alert('Le nom ne doit contenir que des lettres.');
-      return;
-    }
-    if (!this.isValidPhone(f.phone)) {
-      alert('Numéro de téléphone invalide. Format attendu : 06 50 07 86 97');
-      return;
-    }
-    if (!this.isValidEmail(f.email)) {
-      alert('Adresse e-mail invalide.');
-      return;
-    }
+    if (!f.firstName.trim() || !f.lastName.trim() || !f.phone.trim()) { alert('Veuillez remplir prénom, nom et téléphone.'); return; }
+    if (!this.isValidName(f.firstName)) { alert('Le prénom ne doit contenir que des lettres.'); return; }
+    if (!this.isValidName(f.lastName)) { alert('Le nom ne doit contenir que des lettres.'); return; }
+    if (!this.isValidPhone(f.phone)) { alert('Numéro de téléphone invalide. Format attendu : 06 50 07 86 97'); return; }
+    if (!this.isValidEmail(f.email)) { alert('Adresse e-mail invalide.'); return; }
     this.appointmentLoading = true;
     try {
       await this.apiService.sendAppointment({ ...f, selectedDateLabel: this.selectedDateLabel, selectedSlot: this.selectedSlot });
-      this.ngZone.run(() => {
-        this.appointmentLoading = false;
-        this.goStep(4);
-      });
+      this.ngZone.run(() => { this.appointmentLoading = false; this.goStep(4); });
       this.openConfirmModal('Votre demande de rendez-vous a bien été envoyée. Notre chauffeur vous contactera pour confirmer le créneau.');
     } catch (err) {
       console.error('confirmAppointment error (affiché en succès quand même) :', err);
-      this.ngZone.run(() => {
-        this.appointmentLoading = false;
-        this.goStep(4);
-      });
+      this.ngZone.run(() => { this.appointmentLoading = false; this.goStep(4); });
       this.openConfirmModal('Votre demande de rendez-vous a bien été envoyée. Notre chauffeur vous contactera pour confirmer le créneau.');
     }
   }
@@ -603,9 +491,7 @@ export class App implements OnInit, OnDestroy {
     ];
   }
 
-  private initCalendar(): void {
-    const t = new Date(); this.currentYear = t.getFullYear(); this.currentMonth = t.getMonth(); this.renderCalendar();
-  }
+  private initCalendar(): void { const t = new Date(); this.currentYear = t.getFullYear(); this.currentMonth = t.getMonth(); this.renderCalendar(); }
 
   private renderCalendar(): void {
     this.calendarLabel = `${this.months[this.currentMonth]} ${this.currentYear}`;

@@ -472,56 +472,115 @@ img { max-width: 100%; display: block; }
 }
 
 /* ============================================================
-   POP-UP CONFIRMATION D'ENVOI
+   PAGE MENTIONS LÉGALES
    ============================================================ */
-.confirm-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(10,10,11,0.72);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 1.5rem;
-  animation: confirmFadeIn 0.2s ease-out;
+.legal-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 3.5rem;
+  align-items: start;
 }
 
-.confirm-modal {
+.legal-content { display: flex; flex-direction: column; gap: 0; }
+
+.legal-section {
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.legal-section:last-of-type { border-bottom: none; }
+
+.legal-section h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.legal-section p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+}
+.legal-section p:last-child { margin-bottom: 0; }
+
+.legal-contact {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+.legal-update {
+  font-size: 0.75rem;
+  color: rgba(240,237,232,0.3);
+  margin-top: 2rem;
+  font-style: italic;
+}
+
+/* ── Aside sticky ── */
+.legal-aside { position: sticky; top: 90px; display: flex; flex-direction: column; gap: 1.25rem; }
+
+.legal-aside-card {
   background: var(--dark-3);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 2.5rem 2rem;
-  max-width: 420px;
-  width: 100%;
-  text-align: center;
+  padding: 1.5rem;
+}
+.legal-aside-card.mt { margin-top: 0; }
+
+.legal-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.legal-nav a {
+  font-size: 0.8rem;
+  color: var(--muted);
+  cursor: default;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+.legal-nav a:hover {
+  background: rgba(201,168,76,0.08);
+  color: var(--gold);
+}
+
+.legal-back {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 900px) {
+  .legal-grid { grid-template-columns: 1fr; }
+  .legal-aside { position: static; }
+}
+
+/* ============================================================
+   POP-UP CONFIRMATION D'ENVOI
+   ============================================================ */
+.confirm-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,10,11,0.72);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; padding: 1.5rem;
+  animation: confirmFadeIn 0.2s ease-out;
+}
+.confirm-modal {
+  background: var(--dark-3); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 2.5rem 2rem;
+  max-width: 420px; width: 100%; text-align: center;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   animation: confirmPopIn 0.25s ease-out;
 }
-
 .confirm-icon { font-size: 2.75rem; margin-bottom: 0.75rem; }
-
-.confirm-modal h3 {
-  font-size: 1.3rem;
-  color: var(--white);
-  margin-bottom: 0.6rem;
-}
-
-.confirm-modal p {
-  color: var(--muted);
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-}
-
+.confirm-modal h3 { font-size: 1.3rem; color: var(--white); margin-bottom: 0.6rem; }
+.confirm-modal p { color: var(--muted); line-height: 1.6; margin-bottom: 1.5rem; font-size: 0.95rem; }
 .confirm-modal .btn-primary { width: 100%; }
-
-@keyframes confirmFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes confirmPopIn {
-  from { opacity: 0; transform: scale(0.92) translateY(8px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
+@keyframes confirmFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes confirmPopIn { from { opacity: 0; transform: scale(0.92) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
