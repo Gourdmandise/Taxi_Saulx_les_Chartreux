@@ -247,6 +247,12 @@ export class NotificationService {
     const raw = (process.env.FROM_EMAIL || process.env.RESEND_FROM || '').trim();
     const fallback = 'onboarding@resend.dev';
 
+    // 🔍 DEBUG TEMPORAIRE — à retirer une fois le problème résolu.
+    // Affiche la valeur brute encodée pour détecter tout caractère invisible.
+    console.log('[DEBUG resolveFromEmail] raw =', JSON.stringify(raw));
+    console.log('[DEBUG resolveFromEmail] raw length =', raw.length);
+    console.log('[DEBUG resolveFromEmail] raw charCodes =', [...raw].map((c) => c.charCodeAt(0)).join(','));
+
     // Extrait l'email, qu'il soit déjà entre chevrons ("<a@b.fr>"),
     // au format "Nom <a@b.fr>", ou une adresse brute "a@b.fr".
     // On reconstruit systématiquement un seul jeu de chevrons pour
