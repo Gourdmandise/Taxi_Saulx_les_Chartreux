@@ -124,7 +124,7 @@ export class App implements OnInit, OnDestroy {
     { display: '0+', label: 'Courses réalisées', target: 12000, suffix: '+', prefix: '' },
     { display: '5,0', label: 'Note Google / 5', target: 50, suffix: '', prefix: '' },
     { display: '0 €', label: 'Frais annulation', target: 0, suffix: ' €', prefix: '' },
-    { display: '0', label: 'Heures sur 24 disponible', target: 24, suffix: '', prefix: '' },
+    { display: '24/7', label: 'Disponible en tout temps', target: 0, suffix: '', prefix: '' },
   ];
 
   // ── Slider révél ──────────────────────────────────────────────────────────
@@ -301,7 +301,7 @@ export class App implements OnInit, OnDestroy {
         clearInterval(interval);
         this.displayStats[0].display = '+12 000';
         this.displayStats[1].display = '5,0';
-        this.displayStats[3].display = '24';
+        this.displayStats[3].display = '24/7';
       }
     }, 1000 / fps);
   }
@@ -394,7 +394,7 @@ export class App implements OnInit, OnDestroy {
         this.statsAnimated = false;
         this.displayStats[0].display = '0+';
         this.displayStats[1].display = '0,0';
-        this.displayStats[3].display = '0';
+        this.displayStats[3].display = '24/7';
       }, 100);
     }
   }
