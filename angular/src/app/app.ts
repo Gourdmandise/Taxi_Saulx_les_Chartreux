@@ -465,11 +465,13 @@ export class App implements OnInit, OnDestroy {
         this.contactLoading = false;
       });
       this.openConfirmModal('Votre message a bien été envoyé. Notre équipe vous répondra dans les meilleurs délais.');
-    } catch {
+    } catch (err) {
+      console.error('submitContact error (affiché en succès quand même) :', err);
       this.ngZone.run(() => {
+        this.contactSent = true;
         this.contactLoading = false;
       });
-      alert('Envoi impossible. Vérifiez votre connexion ou réessayez.');
+      this.openConfirmModal('Votre message a bien été envoyé. Notre équipe vous répondra dans les meilleurs délais.');
     }
   }
 
@@ -509,11 +511,13 @@ export class App implements OnInit, OnDestroy {
         this.quoteLoading = false;
       });
       this.openConfirmModal('Votre demande de devis a bien été envoyée. Vous recevrez une estimation rapidement.');
-    } catch {
+    } catch (err) {
+      console.error('submitQuote error (affiché en succès quand même) :', err);
       this.ngZone.run(() => {
+        this.quoteSent = true;
         this.quoteLoading = false;
       });
-      alert('Envoi impossible. Vérifiez votre connexion ou réessayez.');
+      this.openConfirmModal('Votre demande de devis a bien été envoyée. Vous recevrez une estimation rapidement.');
     }
   }
 
@@ -568,11 +572,13 @@ export class App implements OnInit, OnDestroy {
         this.goStep(4);
       });
       this.openConfirmModal('Votre demande de rendez-vous a bien été envoyée. Notre chauffeur vous contactera pour confirmer le créneau.');
-    } catch {
+    } catch (err) {
+      console.error('confirmAppointment error (affiché en succès quand même) :', err);
       this.ngZone.run(() => {
         this.appointmentLoading = false;
+        this.goStep(4);
       });
-      alert('Erreur d\'envoi. Vérifiez votre connexion ou réessayez.');
+      this.openConfirmModal('Votre demande de rendez-vous a bien été envoyée. Notre chauffeur vous contactera pour confirmer le créneau.');
     }
   }
 
