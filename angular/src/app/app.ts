@@ -134,12 +134,12 @@ export class App implements OnInit, OnDestroy {
   // ── Données affichage ─────────────────────────────────────────────────────
   protected readonly heroStats = [
     { value: '+12 000', label: 'Courses réalisées' },
-    { value: '5/5', label: '1 675 avis Google' },
+    { value: '5/5', label: '4 avis Google' },
   ];
 
   protected readonly bandItems = [
     { icon: '✈️', text: 'Aéroports', highlight: 'CDG · Orly · Beauvais' },
-    { icon: '⭐', text: 'Note Google', highlight: '5/5 · 1 675 avis' },
+    { icon: '⭐', text: 'Note Google', highlight: '5/5 · 4 avis' },
     { icon: '🔒', text: 'Annulation', highlight: 'gratuite jusqu\'à 1h avant' },
   ];
 
