@@ -603,6 +603,7 @@ export class App implements OnInit, OnDestroy {
     const t = new Date(); this.currentYear = t.getFullYear(); this.currentMonth = t.getMonth(); this.renderCalendar();
   }
 
+
   private renderCalendar(): void {
     this.calendarLabel = `${this.months[this.currentMonth]} ${this.currentYear}`;
     const today = new Date(); today.setHours(0, 0, 0, 0);
