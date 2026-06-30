@@ -42,15 +42,20 @@ export class NotificationService {
       const adminText = this.buildAdminText(type, payload);
       const adminHtml = this.buildAdminHtml(type, payload);
 
-      await this.dispatch({
-        from: fromEmail,
-        to: adminEmail,
-        replyTo: clientEmail ?? fromEmail,
-        subject: adminSubject,
-        text: adminText,
-        html: adminHtml,
-        attachments,
-      });
+      try {
+        await this.dispatch({
+          from: fromEmail,
+          to: adminEmail,
+          replyTo: clientEmail ?? fromEmail,
+          subject: adminSubject,
+          text: adminText,
+          html: adminHtml,
+          attachments,
+        });
+      } catch (err) {
+        // Un échec d'envoi admin ne doit jamais empêcher l'envoi de la confirmation client
+        console.error(`✗ Échec envoi notification admin (${adminEmail}) :`, err);
+      }
     }
 
     // ── Mail de confirmation client ───────────────────────────────────────────
@@ -362,13 +367,16 @@ export class NotificationService {
 
   private resolveFromEmail(): string {
     const raw = (process.env.FROM_EMAIL || process.env.RESEND_FROM || '').trim();
-    if (!raw) return 'Taxi Saulx les Chartreux <onboarding@resend.dev>';
+    const fallback = 'onboarding@resend.dev';
 
-    // Accepte "Nom <email@domain.com>" — valide le format complet
-    const matchFull = raw.match(/^[^<]+ <[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}>$/);
-    if (matchFull) return raw;
+    // Extrait l'email, qu'il soit déjà entre chevrons ("<a@b.fr>"),
+    // au format "Nom <a@b.fr>", ou une adresse brute "a@b.fr".
+    // On reconstruit systématiquement un seul jeu de chevrons pour
+    // éviter tout doublon (bug "<<a@b.fr>>" observé en production).
+    const bracketMatch = raw.match(/<([^<>]+)>/);
+    const bareMatch = raw.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/);
+    const email = (bracketMatch?.[1] ?? bareMatch?.[0] ?? fallback).trim();
 
-    // Adresse brute → on ajoute le nom d'affichage
-    return `Taxi Saulx les Chartreux <${raw}>`;
+    return `Taxi Saulx les Chartreux <${email}>`;
   }
 }
