@@ -187,7 +187,7 @@ export class App implements OnInit, OnDestroy {
   protected readonly reviews = [
     { name: 'Manuel Bras Gomes', date: 'il y a un mois', text: 'Excellente prestation pour un trajet vers l\'aéroport de Roissy. Julien est très sympathique, ponctuel et sérieux. La prise en charge a été parfaite, avec un véhicule propre et confortable. Conduite souple et rassurante. Arrivé à l\'heure au terminal sans aucun stress. Je referai appel à ses services sans hésiter pour mes prochains déplacements. Merci encore !' },
     { name: 'Nono Abou', date: 'il y a un mois', text: 'Excellent service. Le taxi est arrivé à l\'heure à l\'aéroport et le trajet s\'est déroulé sans souci. Chauffeur professionnel, véhicule propre et conduite agréable. Je recommande vivement. Merci pour votre service !' },
-    { name: 'Dida Didadida', date: 'il y a un mois', text: 'Chauffeur sérieux et ponctuel, voiture confortable et propre. Service au top, je recommande. Merci à Julien' },
+    { name: 'Dida Didadida', date: 'il y a un mois', text: 'Chauffeur sérieux et ponctuel, voiture confortable et propre. Service au top, je recommande. Merci à Julien, Saulx les chartreux' },
   ];
 
   protected readonly guarantees = [
