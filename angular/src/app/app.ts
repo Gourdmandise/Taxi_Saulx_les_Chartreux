@@ -1,10 +1,43 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Meta, Title } from '@angular/platform-browser';
 import { ApiService } from './api.service';
 
 type Page = 'home' | 'contact' | 'devis' | 'rdv' | 'mentions-legales';
 type AppointmentStep = 1 | 2 | 3 | 4;
+
+// ── Correspondance page ↔ URL, pour un vrai routing (SEO) ──────────────────
+const PAGE_PATHS: Record<Page, string> = {
+  home: '/',
+  contact: '/contact',
+  devis: '/devis',
+  rdv: '/reservation',
+  'mentions-legales': '/mentions-legales',
+};
+
+const PAGE_META: Record<Page, { title: string; description: string }> = {
+  home: {
+    title: 'Taxi Saulx-les-Chartreux (91) | Réservation 24h/24 · Aéroports CDG, Orly, Beauvais',
+    description: 'Taxi conventionné à Saulx-les-Chartreux, Essonne (91). Transferts aéroports CDG, Orly, Beauvais, gares, trajets longue distance. Disponible 24h/24, 7j/7. Réservation en ligne.',
+  },
+  contact: {
+    title: 'Contact | Taxi Saulx-les-Chartreux (91)',
+    description: 'Contactez votre taxi à Saulx-les-Chartreux : téléphone, formulaire de contact. Réponse rapide, disponible 24h/24 et 7j/7.',
+  },
+  devis: {
+    title: 'Devis gratuit | Taxi Saulx-les-Chartreux (91)',
+    description: 'Demandez un devis gratuit et sans engagement pour votre trajet en taxi à Saulx-les-Chartreux et dans l\'Essonne. Réponse rapide, tarif fixe garanti.',
+  },
+  rdv: {
+    title: 'Prendre rendez-vous | Taxi Saulx-les-Chartreux (91)',
+    description: 'Réservez votre course en ligne : choisissez la date et l\'heure de votre trajet en taxi à Saulx-les-Chartreux et environs.',
+  },
+  'mentions-legales': {
+    title: 'Mentions légales | Taxi Saulx-les-Chartreux (91)',
+    description: 'Mentions légales et politique de confidentialité du site Taxi Saulx-les-Chartreux.',
+  },
+};
 
 interface CalendarCell { label: string; dateKey?: string; disabled: boolean; isToday: boolean; isSelected: boolean; isBlank: boolean; }
 interface ContactCard { icon: string; title: string; text: string; linkLabel?: string; linkHref?: string; }
@@ -244,14 +277,39 @@ export class App implements OnInit, OnDestroy {
   constructor(
     private readonly apiService: ApiService,
     private readonly ngZone: NgZone,
+    private readonly location: Location,
+    private readonly titleService: Title,
+    private readonly metaService: Meta,
   ) {}
 
   ngOnInit(): void {
+    this.initFromUrl();
     this.initCalendar();
     this.startCarouselAuto();
     this.setupScrollObserver();
     this.setupStatsObserver();
     setTimeout(() => this.updateCarouselItemWidth(), 150);
+  }
+
+  /** Détermine la page à afficher au chargement à partir de l'URL (permet les liens directs /contact, /devis, etc.) */
+  private initFromUrl(): void {
+    const path = this.location.path(true) || '/';
+    const match = (Object.entries(PAGE_PATHS) as [Page, string][]).find(([, p]) => p === path);
+    this.currentPage = match ? match[0] : 'home';
+    this.applyPageMeta(this.currentPage);
+  }
+
+  /** Met à jour le <title> et la meta description pour la page courante (SEO) */
+  private applyPageMeta(page: Page): void {
+    const meta = PAGE_META[page];
+    this.titleService.setTitle(meta.title);
+    this.metaService.updateTag({ name: 'description', content: meta.description });
+  }
+
+  @HostListener('window:popstate')
+  onPopState(): void {
+    this.initFromUrl();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   ngOnDestroy(): void {
@@ -359,6 +417,10 @@ export class App implements OnInit, OnDestroy {
     this.currentPage = page;
     this.mobileMenuOpen = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (this.location.path(true) !== PAGE_PATHS[page]) {
+      this.location.go(PAGE_PATHS[page]);
+    }
+    this.applyPageMeta(page);
     if (page === 'rdv') this.initCalendar();
     if (page === 'home') {
       setTimeout(() => {
@@ -369,9 +431,17 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
+  /** À utiliser sur les <a href="..."> pour garder la navigation SPA (pas de rechargement complet) tout en restant crawlable */
+  protected navigate(event: Event, page: Page): void {
+    event.preventDefault();
+    this.goTo(page);
+  }
+
   protected scrollSection(id: string): void {
     if (this.currentPage !== 'home') {
       this.currentPage = 'home'; this.mobileMenuOpen = false;
+      if (this.location.path(true) !== PAGE_PATHS.home) this.location.go(PAGE_PATHS.home);
+      this.applyPageMeta('home');
       setTimeout(() => { this.setupScrollObserver(); this.setupStatsObserver(); this.statsAnimated = false; }, 100);
       setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
     } else {

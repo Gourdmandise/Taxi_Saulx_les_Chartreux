@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.taxi-saulx-les-chartreux.fr/sitemap.xml
