@@ -168,7 +168,7 @@ export class App implements OnInit, OnDestroy {
 
   protected readonly trustCards = [
     { icon: '🎩', title: 'Entreprises', description: 'Dirigeants, diplomates, voyageurs d\'affaires. Mise a disposition possible.' },
-    { icon: '💍', title: 'Événements', description: 'Séminaires, galas, lancements — une attention portée à chaque détail.' },
+    { icon: '💍', title: 'Événements', description: 'Séminaires, galas, lancements — une attention portée à chaque détail, mise a disposition possible.' },
     { icon: '✈️', title: 'Transfert aéroport & gares', description: 'CDG, Orly, Beauvais. Suivi des vols et trains en temps réel.' },
   ];
 
@@ -198,7 +198,6 @@ export class App implements OnInit, OnDestroy {
   ];
 
   protected readonly faqItems = [
-    { q: 'Quels sont vos tarifs ?', a: 'Le tarif dépend du trajet, du véhicule et de l\'heure (voir notre grille tarifaire). Aucun supplément caché. À partir de 45 € la course intra-Paris, 75 € pour Roissy CDG.' },
     { q: 'Travaillez-vous partout en France ?', a: 'Île-de-France 24/7 sans préavis. Province et longue distance sur réservation (idéalement 24h à l\'avance). Trajets internationaux possibles (Bruxelles, Londres, Genève) — devis dédié.' },
     { q: 'Comment puis-je payer ?', a: 'Carte bancaire, espèces ou Apple Pay. Facture professionnelle remise par mail. Possibilité d\'ouvrir un compte entreprise (paiement mensualisé).' },
     { q: 'Et si j\'ai besoin d\'annuler ?', a: 'Annulation gratuite jusqu\'à 1h avant la prise en charge. Au-delà, 50 % du tarif.' },

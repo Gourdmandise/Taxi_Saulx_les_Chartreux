@@ -2,7 +2,7 @@
 <nav class="top-nav" [class.nav-scrolled]="navScrolled">
   <div class="nav-inner">
     <a class="nav-logo" href="/" (click)="navigate($event, 'home')">
-      TAXI <span>PALAISEAU</span>
+      TAXI <span>Saulx les Chartreux</span>
     </a>
     <div class="nav-links">
       <a href="/" [class.active]="currentPage === 'home'" (click)="navigate($event, 'home')">Accueil</a>
@@ -40,7 +40,7 @@
     <div class="hero-bg-overlay"></div>
     <img class="hero-img" src="https://scrapper.meninbot.com/static/uploads/sites/8f980179762b/IMAGE_PAGE_D_ACCEUIL_TP_5808a54e.png" alt="Taxi Saulx les Chartreux" />
     <div class="hero-content animate-fade-up">
-      <div class="hero-badge">✦ Chauffeur VTC certifié · 24/7</div>
+      <div class="hero-badge">✦ Chauffeur Taxi certifié · 24/7</div>
       <h1>L'excellence à chaque trajet<br /><span class="accent">avec Taxi Saulx les Chartreux</span></h1>
       <p class="hero-desc">Optez pour une expérience de taxi haut de gamme, que vous soyez un client particulier ou professionnel.</p>
       <div class="hero-btns">
@@ -144,7 +144,7 @@
         <div class="section-tag">L'Excellence</div>
         <h2 class="section-title">Chauffeur professionnel.<br />Service haut de gamme.</h2>
         <div class="divider"></div>
-        <p class="section-copy">Taxi Saulx les Chartreux c'est le service VTC qui change votre rapport au déplacement. Véhicule impeccable, chauffeur en tenue, ponctualité absolue.</p>
+        <p class="section-copy">Taxi Saulx les Chartreux c'est le service Taxi qui change votre rapport au déplacement. Véhicule impeccable, chauffeur en tenue, ponctualité absolue.</p>
         <ul class="excellence-list">
           @for (item of excellenceItems; track item) {
             <li class="excellence-li">
@@ -193,9 +193,9 @@
         <div class="slider-label right-lbl">Intérieur</div>
       </div>
       <div class="slider-specs">
-        <span>🚘 Mercedes-Maybach · Berline premium</span>
+        <span>🚘 Mercedes · Berline premium</span>
         <span>🛋️ Cuir nappa, atmosphère feutrée</span>
-        <span>📶 Wifi, eau, chargeurs, presse du jour</span>
+        <span>📶 Wifi, eau, chargeurs</span>
       </div>
     </div>
   </section>
@@ -302,7 +302,7 @@
       <h2>Votre déplacement mérite<br /><span class="gold-text">un chauffeur d'exception</span></h2>
       <p>Réservation 30 sec · Disponible 24/7 · Île-de-France & national</p>
       <button class="btn-primary" type="button" (click)="goTo('devis')">Réserver une course →</button>
-      <p class="cta-sub">+12 000 courses · 4,9/5 · Ponctualité garantie</p>
+      <p class="cta-sub">+12 000 courses · 5/5 · Ponctualité garantie</p>
     </div>
   </section>
 
@@ -331,8 +331,8 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <div>
-        <a class="nav-logo footer-logo" href="/" (click)="navigate($event, 'home')">TAXI <span>PALAISEAU</span></a>
-        <p class="footer-desc">Chauffeur VTC certifié · Assurance professionnelle · Disponible 24/7</p>
+        <a class="nav-logo footer-logo" href="/" (click)="navigate($event, 'home')">TAXI <span>Saulx les Chartreux</span></a>
+        <p class="footer-desc">Chauffeur Taxi certifié · Assurance professionnelle · Disponible 24/7</p>
         <p class="footer-desc">© 2026 Taxi Saulx les Chartreux · Tous droits réservés</p>
       </div>
       <div class="footer-col">
@@ -356,7 +356,7 @@
         <h4>Contact</h4>
         <ul>
           <li><a href="tel:0650078697">📞 06 50 07 86 97</a></li>
-          <li>📍 Palaiseau · Essonne 91</li>
+          <li>📍 Saulx les Chartreux · Essonne 91</li>
           <li>🕐 24h/24 · 7j/7</li>
         </ul>
       </div>
@@ -490,7 +490,7 @@
             pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s'\-]{1,60}" maxlength="60" title="Lettres uniquement (pas de chiffres)"
             (input)="onNameInput($event, quoteForm, 'lastName')" /></div>
         </div>
-        <div class="form-group"><label>Point de départ *</label><input type="text" placeholder="Ex : Palaiseau…" [(ngModel)]="quoteForm.departure" /></div>
+        <div class="form-group"><label>Point de départ *</label><input type="text" placeholder="Ex : Saulx les Chartreux…" [(ngModel)]="quoteForm.departure" /></div>
         <div class="form-group"><label>Point d'arrivée *</label><input type="text" placeholder="Ex : Aéroport d'Orly…" [(ngModel)]="quoteForm.arrival" /></div>
         <div class="two-col">
           <div class="form-group">
