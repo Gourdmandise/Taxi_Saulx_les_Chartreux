@@ -27,7 +27,7 @@ const PAGE_META: Record<Page, { title: string; description: string }> = {
   },
   devis: {
     title: 'Devis gratuit | Taxi Saulx-les-Chartreux (91)',
-    description: 'Demandez un devis gratuit et sans engagement pour votre trajet en taxi à Saulx-les-Chartreux et dans l\'Essonne. Réponse rapide, tarif fixe garanti.',
+    description: 'Demandez un devis gratuit et sans engagement pour votre trajet en taxi à Saulx-les-Chartreux et dans l\'Essonne. Réponse rapide.',
   },
   rdv: {
     title: 'Prendre rendez-vous | Taxi Saulx-les-Chartreux (91)',
