@@ -574,7 +574,7 @@ export class App implements OnInit, OnDestroy {
       const date = new Date(this.currentYear, this.currentMonth, day);
       const w = date.getDay();
       const dateKey = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-      cells.push({ label: String(day), dateKey, disabled: w === 0 || w === 6 || date < today, isToday: date.getTime() === today.getTime(), isSelected: this.selectedDateKey === dateKey && w !== 0 && w !== 6 && date >= today, isBlank: false });
+      cells.push({ label: String(day), dateKey, disabled: date < today, isToday: date.getTime() === today.getTime(), isSelected: this.selectedDateKey === dateKey && date >= today, isBlank: false });
     }
     this.calendarCells = cells;
   }
