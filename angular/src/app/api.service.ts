@@ -34,7 +34,7 @@ interface AppointmentPayload {
   selectedSlot: string;
 }
 
-const TIMEOUT_MS = 10000;
+const TIMEOUT_MS = 25000;
 
 const isProd = window.location.hostname !== 'localhost';
 const BACKEND_URL = window.location.hostname === 'localhost'

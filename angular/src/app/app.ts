@@ -495,9 +495,9 @@ export class App implements OnInit, OnDestroy {
       this.ngZone.run(() => { this.quoteSent = true; this.quoteLoading = false; });
       this.openConfirmModal('Votre demande de devis a bien été envoyée. Vous recevrez une estimation rapidement.');
     } catch (err) {
-      console.error('submitQuote error (affiché en succès quand même) :', err);
-      this.ngZone.run(() => { this.quoteSent = true; this.quoteLoading = false; });
-      this.openConfirmModal('Votre demande de devis a bien été envoyée. Vous recevrez une estimation rapidement.');
+      console.error('submitQuote error :', err);
+      this.ngZone.run(() => { this.quoteLoading = false; });
+      alert('Une erreur est survenue pendant l\'envoi de votre demande de devis. Merci de réessayer dans un instant, ou de nous appeler directement au 06 50 07 86 97.');
     }
   }
 
