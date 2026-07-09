@@ -554,9 +554,9 @@ export class App implements OnInit, OnDestroy {
 
   protected buildTariffRows() {
     return [
-      { label: 'Prise en charge', value: '2,60 €' }, { label: 'Tarif A (jour, agglo)', value: '1,21 €/km' },
-      { label: 'Tarif B (nuit / périurbain)', value: '1,62 €/km' }, { label: 'Attente / marche lente', value: '33,90 €/h' },
-      { label: 'Aéroport / longue distance', value: 'Prix fixe' },
+      { label: 'Prise en charge', a: '2,70 €', b: '2,70 €', c: '2,70 €', d: '2,70 €' },
+      { label: 'Tarif kilométrique', a: '1,01 €', b: '1,51 €', c: '2,02 €', d: '3,03 €' },
+      { label: 'Taux horaire d\'attente / marche lente', a: '41,40 €', b: '41,40 €', c: '41,40 €', d: '41,40 €' },
     ];
   }
 

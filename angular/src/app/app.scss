@@ -391,6 +391,18 @@ img { max-width: 100%; display: block; }
 .tarif-row:last-child { border-bottom: none; }
 .tarif-row span { color: var(--muted); }
 .tarif-row strong { color: var(--gold); }
+.tarif-table-wrap { overflow-x: auto; }
+.tarif-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.tarif-table th, .tarif-table td { padding: 0.6rem 0.5rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06); white-space: nowrap; }
+.tarif-table th:first-child, .tarif-table td:first-child { text-align: left; white-space: normal; }
+.tarif-table thead th { color: var(--gold); font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+.tarif-table tbody td { color: var(--muted); }
+.tarif-table tbody td:not(:first-child) { color: var(--white); font-weight: 600; }
+.tarif-table tbody tr:last-child td { border-bottom: none; }
+.tarif-note { font-size: 0.75rem; color: var(--muted); font-style: italic; margin: 0.85rem 0 0; }
+.tarif-legend { list-style: none; margin: 1rem 0 0; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.35rem; }
+.tarif-legend li { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+.tarif-legend li strong { color: var(--gold); }
 .rdv-page-body { max-width: 860px; margin: 0 auto; padding: 3rem 2rem 5rem; }
 .steps-progress { display: flex; align-items: center; margin-bottom: 2.5rem; }
 .sp-step { display: flex; align-items: center; gap: 0.6rem; font-size: 0.78rem; font-weight: 600; color: var(--muted); }

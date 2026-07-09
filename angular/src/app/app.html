@@ -496,11 +496,33 @@
           </article>
         }
       </div>
-      <div class="tarif-preview">
-        <h3>Aperçu tarifaire</h3>
-        @for (row of buildTariffRows(); track row.label) {
-          <div class="tarif-row"><span>{{ row.label }}</span><strong>{{ row.value }}</strong></div>
-        }
+      <div class="tarif-preview official-tarif">
+        <h3>Tarifs TTC réglementés (arrêté préfectoral, Essonne)</h3>
+        <div class="tarif-table-wrap">
+          <table class="tarif-table">
+            <thead>
+              <tr><th>Tarifs TTC</th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+            </thead>
+            <tbody>
+              @for (row of buildTariffRows(); track row.label) {
+                <tr>
+                  <td>{{ row.label }}</td>
+                  <td>{{ row.a }}</td>
+                  <td>{{ row.b }}</td>
+                  <td>{{ row.c }}</td>
+                  <td>{{ row.d }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="tarif-note">Tarif minimum : 8 € (suppléments inclus) pour les courses de petite distance.</p>
+        <ul class="tarif-legend">
+          <li><strong>A</strong> — Course de jour (8h–19h), retour en charge à la station</li>
+          <li><strong>B</strong> — Course de nuit (19h–8h), dimanche et jours fériés, retour en charge</li>
+          <li><strong>C</strong> — Course de jour (8h–19h), retour à vide à la station</li>
+          <li><strong>D</strong> — Course de nuit (19h–8h), retour à vide à la station</li>
+        </ul>
       </div>
     </div>
     <div class="form-card">
