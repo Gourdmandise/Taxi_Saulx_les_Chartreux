@@ -554,7 +554,7 @@ export class App implements OnInit, OnDestroy {
 
   protected buildTariffRows() {
     return [
-      { label: 'Prise en charge', a: '2,70 €', b: '2,70 €', c: '2,70 €', d: '2,70 €'},
+      { label: 'Prise en charge *', a: '2,70 €', b: '2,70 €', c: '2,70 €', d: '2,70 €'},
       { label: 'Tarif kilométrique', a: '1,01 €', b: '1,51 €', c: '2,02 €', d: '3,03 €'},
       { label: 'Taux horaire d\'attente / marche lente', a: '41,40 €', b: '41,40 €', c: '41,40 €', d: '41,40 €'},
       { label: 'Distance parcourue (en metre) par chute de 0,10 €', a: '99,01 m', b: '66,22 m', c: '49,50 m', d: '33,00 m'},
